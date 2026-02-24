@@ -130,9 +130,9 @@ function DeckToggle({ active, onToggle }) {
         borderRadius: 8, padding: 3, backdropFilter: "blur(12px)",
       }}
     >
-      {["rebuttal", "fdose"].map((id) => {
+      {["rebuttal", "fdose", "intent"].map((id) => {
         const isActive = active === id;
-        const label = id === "rebuttal" ? "REBUTTAL" : "FDOSE";
+        const label = id === "rebuttal" ? "REBUTTAL" : id === "fdose" ? "FDOSE" : "INTENT";
         return (
           <button
             key={id}
@@ -930,10 +930,591 @@ function FD12() {
 
 const FD_SLIDES = [FD1, FD2, FD3, FD4, FD5, FD6, FD7, FD8, FD9, FD10, FD11, FD12];
 
+// ═══════════════════════════════════════════════════════════════
+// DECK 3: INTENT ENGINEERING (18 SLIDES)
+// ═══════════════════════════════════════════════════════════════
+
+function CSlide({ children }) {
+  return <div style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "50px 60px 70px", maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 1 }}>{children}</div>;
+}
+
+function QuoteBlock({ text, author, d = 0 }) {
+  return <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: d, duration: 0.8 }}
+    style={{ padding: "22px 32px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, position: "relative", marginBottom: 20 }}>
+    <div style={{ position: "absolute", top: -6, left: 28, fontSize: 30, color: T.amber, fontFamily: "Georgia, serif" }}>"</div>
+    <p style={{ fontFamily: T.font, fontSize: 15, color: T.white, lineHeight: 1.6, fontStyle: "italic" }}>{text}</p>
+    {author && <p style={{ fontFamily: T.mono, fontSize: 11, color: T.amber, marginTop: 10 }}>— {author}</p>}
+  </motion.div>;
+}
+
+function IE01() {
+  return <CSlide>
+    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}
+      style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+      <PillTag color={T.muted} delay={0.3}>PROMPT</PillTag>
+      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} style={{ color: T.gray, fontSize: 20 }}>→</motion.span>
+      <PillTag color={T.cyan} delay={0.6}>CONTEXT</PillTag>
+      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} style={{ color: T.gray, fontSize: 20 }}>→</motion.span>
+      <PillTag color={T.amber} delay={1.0}>INTENT</PillTag>
+    </motion.div>
+    <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2, duration: 0.8 }}
+      style={{ fontFamily: T.font, fontSize: 42, fontWeight: 700, color: T.white, lineHeight: 1.15, marginBottom: 12 }}>
+      Intent Engineering
+    </motion.h1>
+    <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.8, duration: 0.8 }}
+      style={{ height: 3, width: 280, background: T.amber, transformOrigin: "center", margin: "0 auto 18px", boxShadow: `0 0 20px ${T.amberGlow}` }} />
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.1 }}
+      style={{ fontFamily: T.font, fontSize: 17, color: T.muted, maxWidth: 560, lineHeight: 1.6 }}>
+      The discipline of making organizational purpose — goals, values, tradeoffs, decision boundaries — machine-readable and machine-actionable.
+    </motion.p>
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }}
+      style={{ fontFamily: T.mono, fontSize: 11, color: T.gray, marginTop: 20 }}>
+      Based on Nate B. Jones &nbsp;|&nbsp; AI News & Strategy Daily
+    </motion.p>
+  </CSlide>;
+}
+
+function IE02() {
+  return <CSlide>
+    <SectionLabel>The Klarna Story</SectionLabel>
+    <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.7 }}
+      style={{ fontFamily: T.font, fontSize: 38, fontWeight: 700, color: T.white, lineHeight: 1.2, marginTop: 10, marginBottom: 20 }}>
+      The AI Didn't Fail.<br /><span style={{ color: T.red }}>It Succeeded at the Wrong Thing.</span>
+    </motion.h1>
+    <AmberLine delay={0.6} width={300} />
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+      style={{ fontFamily: T.font, fontSize: 16, color: T.muted, maxWidth: 600, lineHeight: 1.7 }}>
+      In January 2026, Klarna reported its AI agent now does the work of 853 full-time employees and saved $60 million. In the same earnings cycle, its CEO admitted the AI strategy had cost something far more valuable — and he's still trying to buy it back.
+    </motion.p>
+  </CSlide>;
+}
+
+function IE03() {
+  return <Slide>
+    <SectionLabel>Klarna — The Numbers</SectionLabel>
+    <SlideTitle>Everything Looked Perfect on Paper</SlideTitle>
+    <AmberLine />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 24 }}>
+      <MetricCard value="2.3M" label="Conversations handled in first month" color={T.green} delay={0.4} />
+      <MetricCard value="23" label="Markets deployed across" color={T.green} delay={0.5} />
+      <MetricCard value="35" label="Languages supported" color={T.green} delay={0.6} />
+      <MetricCard value="11→2 min" label="Resolution time drop" color={T.green} delay={0.7} />
+    </div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 24 }}>
+      <MetricCard value="853" label="FTE-equivalent work replaced" color={T.amber} delay={0.8} />
+      <MetricCard value="$60M" label="Projected savings" color={T.amber} delay={0.9} />
+      <MetricCard value="700" label="Human agents laid off" color={T.red} delay={1.0} />
+    </div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}
+      style={{ padding: "12px 20px", background: T.redDim, border: `1px solid ${T.red}33`, borderRadius: 8, textAlign: "center" }}>
+      <span style={{ fontFamily: T.font, fontSize: 14, color: T.red, fontWeight: 600 }}>Then customers started complaining. Generic answers. Robotic tone. No judgment.</span>
+    </motion.div>
+  </Slide>;
+}
+
+function IE04() {
+  return <Slide>
+    <SectionLabel>The Real Failure</SectionLabel>
+    <SlideTitle>Two Profoundly Different Goals</SlideTitle>
+    <AmberLine />
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
+      <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
+        style={{ background: T.redDim, border: `1px solid ${T.red}33`, borderRadius: 10, padding: "22px 20px" }}>
+        <div style={{ fontFamily: T.mono, fontSize: 11, color: T.red, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.red }} /> What the Agent Optimized For
+        </div>
+        <div style={{ fontFamily: T.font, fontSize: 22, fontWeight: 700, color: T.white, marginBottom: 8 }}>Resolve tickets fast.</div>
+        <div style={{ fontFamily: T.font, fontSize: 13, color: T.muted, lineHeight: 1.5 }}>Measurable. Optimizable. And completely wrong.</div>
+      </motion.div>
+      <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}
+        style={{ background: T.greenDim, border: `1px solid ${T.green}33`, borderRadius: 10, padding: "22px 20px" }}>
+        <div style={{ fontFamily: T.mono, fontSize: 11, color: T.green, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10, display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.green }} /> What the Organization Actually Needed
+        </div>
+        <div style={{ fontFamily: T.font, fontSize: 22, fontWeight: 700, color: T.white, marginBottom: 8 }}>Build lasting customer relationships.</div>
+        <div style={{ fontFamily: T.font, fontSize: 13, color: T.muted, lineHeight: 1.5 }}>Drive lifetime value in a competitive fintech market.</div>
+      </motion.div>
+    </div>
+    <QuoteBlock d={0.9} text="While cost was a predominant evaluation factor, the result was lower quality." author="Sebastian Siemiatkowski, CEO, Klarna — Bloomberg" />
+  </Slide>;
+}
+
+function IE05() {
+  return <Slide>
+    <SectionLabel>The Missing Layer</SectionLabel>
+    <SlideTitle>The Agent Had Context. It Did Not Have Intent.</SlideTitle>
+    <AmberLine />
+    <Subtitle>A human agent with 5 years at the company knows intuitively when to bend a policy, when to spend three extra minutes because a customer's tone says they're about to churn, when efficiency is the right move versus when generosity is.</Subtitle>
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      {["She absorbed Klarna's real values — not the ones on the website", "The ones encoded in decisions managers make every day", "The stories veterans tell new hires", "The unwritten rules about which metrics leadership actually cares about", "The 700 agents who were laid off took this knowledge with them — undocumented"].map((s, i) => (
+        <BulletItem key={i} delay={0.5 + i * 0.15} icon="◆">{s}</BulletItem>
+      ))}
+    </div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
+      style={{ padding: "14px 22px", background: T.amberDim, border: `1px solid ${T.amber}44`, borderRadius: 8, marginTop: 16 }}>
+      <span style={{ fontFamily: T.font, fontSize: 14, fontWeight: 700, color: T.amber }}>The age of "humans just know" is ending. Intent engineering makes what humans know explicit, structured, and machine-actionable.</span>
+    </motion.div>
+  </Slide>;
+}
+
+function IE06() {
+  return <Slide>
+    <SectionLabel>The Evolution</SectionLabel>
+    <SlideTitle>Three Disciplines. Three Eras.</SlideTitle>
+    <AmberLine />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+      {[
+        { era: "01", title: "Prompt Engineering", sub: "2022–2024", desc: "Individual, synchronous, session-based. You sit in front of the chat window, craft an instruction, iterate. Personal skill, personal value.", status: "WARM-UP ACT", color: T.muted, q: "How do I talk to AI?" },
+        { era: "02", title: "Context Engineering", sub: "2024–2025", desc: "Building RAG pipelines, wiring MCP servers, structuring organizational knowledge. Tells agents what to know. Necessary — but not sufficient.", status: "CURRENT ERA", color: T.cyan, q: "What does AI need to know?" },
+        { era: "03", title: "Intent Engineering", sub: "2026+", desc: "Encoding organizational purpose into infrastructure. Not prose in a system prompt — structured, actionable parameters that shape autonomous decisions.", status: "WHAT'S NEXT", color: T.amber, q: "What does the organization need AI to want?" },
+      ].map((c, i) => (
+        <motion.div key={i} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.25 }}
+          style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: "22px 18px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: c.color }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <span style={{ fontFamily: T.mono, fontSize: 28, fontWeight: 700, color: c.color }}>{c.era}</span>
+            <PillTag color={c.color} delay={0.6 + i * 0.25}>{c.status}</PillTag>
+          </div>
+          <div style={{ fontFamily: T.font, fontSize: 17, fontWeight: 700, color: T.white, marginBottom: 4 }}>{c.title}</div>
+          <div style={{ fontFamily: T.mono, fontSize: 10, color: c.color, marginBottom: 12 }}>{c.sub}</div>
+          <div style={{ fontFamily: T.font, fontSize: 12.5, color: T.muted, lineHeight: 1.55, marginBottom: 14 }}>{c.desc}</div>
+          <div style={{ padding: "8px 12px", background: `${c.color}12`, border: `1px solid ${c.color}33`, borderRadius: 6 }}>
+            <span style={{ fontFamily: T.font, fontSize: 12, color: c.color, fontWeight: 600, fontStyle: "italic" }}>"{c.q}"</span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </Slide>;
+}
+
+function IE07() {
+  return <Slide>
+    <SectionLabel>The Intent Gap — Data</SectionLabel>
+    <SlideTitle>Massive Investment. Mixed Results.</SlideTitle>
+    <AmberLine />
+    <TwoCol ratio="1fr 1fr"
+      left={<div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.green, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>The Investment (Real)</motion.div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[
+            { val: "57%", desc: "Putting 21–50% of digital transformation budgets into AI" },
+            { val: "$700M", desc: "Average AI spend for a $13B-revenue company" },
+            { val: "85%", desc: "Fortune 500 companies adopted Microsoft Copilot" },
+          ].map((m, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.15 }}
+              style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 14px", background: T.greenDim, border: `1px solid ${T.green}22`, borderRadius: 6 }}>
+              <span style={{ fontFamily: T.mono, fontSize: 20, fontWeight: 700, color: T.green, minWidth: 70, textAlign: "right" }}>{m.val}</span>
+              <span style={{ fontFamily: T.font, fontSize: 12, color: T.white }}>{m.desc}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>}
+      right={<div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.red, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>The Results (Painful)</motion.div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {[
+            { val: "74%", desc: "Have yet to see tangible value from AI" },
+            { val: "30%", desc: "Of AI pilots failed to achieve scaled impact (McKinsey)" },
+            { val: "84%", desc: "Have not redesigned jobs around AI capabilities" },
+            { val: "21%", desc: "Have a mature model for agent governance (Deloitte)" },
+          ].map((m, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 + i * 0.15 }}
+              style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 14px", background: T.redDim, border: `1px solid ${T.red}22`, borderRadius: 6 }}>
+              <span style={{ fontFamily: T.mono, fontSize: 20, fontWeight: 700, color: T.red, minWidth: 70, textAlign: "right" }}>{m.val}</span>
+              <span style={{ fontFamily: T.font, fontSize: 12, color: T.muted }}>{m.desc}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>}
+    />
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+      style={{ padding: "12px 20px", background: T.amberDim, border: `1px solid ${T.amber}44`, borderRadius: 8, textAlign: "center", marginTop: 20 }}>
+      <span style={{ fontFamily: T.font, fontSize: 13, color: T.amber, fontWeight: 600 }}>These numbers coexist. There is no contradiction — just an unsolved intent gap.</span>
+    </motion.div>
+  </Slide>;
+}
+
+function IE08() {
+  return <Slide>
+    <SectionLabel>Case Study #2</SectionLabel>
+    <SlideTitle>Microsoft Copilot — The $40B Intent Failure</SlideTitle>
+    <AmberLine />
+    <Subtitle>One of the most heavily invested enterprise AI products in history. Billions in infrastructure. AI in every Office app. Aggressive enterprise sales.</Subtitle>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
+      <MetricCard value="85%" label="Fortune 500 adopted" color={T.green} delay={0.5} />
+      <MetricCard value="5%" label="Moved beyond pilot (Gartner)" color={T.red} delay={0.6} />
+      <MetricCard value="~3%" label="M365 users actually using Copilot" color={T.red} delay={0.7} />
+      <MetricCard value="Slashed" label="Internal sales targets (Bloomberg)" color={T.red} delay={0.8} />
+    </div>
+    <QuoteBlock d={1.0} text="Deploying an AI tool across an organization without organizational intent alignment is like hiring 40,000 new employees and never telling them what the company does, what it values, or how to make decisions." author="Nate B. Jones" />
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+      style={{ fontFamily: T.font, fontSize: 13, color: T.muted, lineHeight: 1.5, textAlign: "center" }}>
+      You get lots of activity and not much productivity. AI usage metrics on a dashboard and almost no measurable impact. <span style={{ color: T.amber, fontWeight: 600 }}>That's not a tools problem. That's an intent gap.</span>
+    </motion.p>
+  </Slide>;
+}
+
+function IE09() {
+  return <CSlide>
+    <SectionLabel delay={0}>The Core Problem</SectionLabel>
+    <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8 }}
+      style={{ fontFamily: T.font, fontSize: 28, fontWeight: 700, color: T.white, lineHeight: 1.3, marginTop: 10, marginBottom: 24, maxWidth: 700 }}>
+      Organizations have solved <span style={{ color: T.green }}>"Can AI do this task?"</span><br />
+      They have completely failed to solve <span style={{ color: T.red }}>"Can AI do this task in a way that serves our organizational goals at scale with appropriate judgment?"</span>
+    </motion.h1>
+    <AmberLine delay={0.8} width={300} />
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+      style={{ fontFamily: T.font, fontSize: 18, color: T.amber, fontWeight: 700 }}>
+      That second question is an intent engineering question.
+    </motion.p>
+  </CSlide>;
+}
+
+function IE10() {
+  return <Slide>
+    <SectionLabel>The Three Layers</SectionLabel>
+    <SlideTitle>Closing the Intent Gap</SlideTitle>
+    <AmberLine />
+    <Subtitle>Getting any one right is helpful. Getting all three right is the difference between having AI tools and having an AI-native organization.</Subtitle>
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {[
+        { num: "01", title: "Unified Context Infrastructure", desc: "The connective tissue between data and agents. MCP, RAG pipelines, data governance, semantic consistency. The layer the industry is most aware of — and still hasn't built.", color: T.cyan, status: "BUILDING" },
+        { num: "02", title: "Coherent AI Worker Toolkit", desc: "Shared workflows, sanctioned tools, organizational capability maps. The difference between individual AI use and organizational AI leverage. 30% gains vs 300% gains.", color: T.blue, status: "NASCENT" },
+        { num: "03", title: "Intent Engineering Proper", desc: "Machine-readable organizational purpose. Goal translation, decision boundaries, value hierarchies, delegation frameworks, feedback loops. The layer that almost certainly doesn't exist in your business.", color: T.amber, status: "WHITESPACE" },
+      ].map((l, i) => (
+        <motion.div key={i} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 + i * 0.2 }}
+          style={{ display: "flex", gap: 18, padding: "16px 20px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, alignItems: "center" }}>
+          <div style={{ fontFamily: T.mono, fontSize: 28, fontWeight: 700, color: l.color, minWidth: 50, textAlign: "center" }}>{l.num}</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+              <span style={{ fontFamily: T.font, fontSize: 16, fontWeight: 700, color: T.white }}>{l.title}</span>
+              <PillTag color={l.color} delay={0.6 + i * 0.2}>{l.status}</PillTag>
+            </div>
+            <span style={{ fontFamily: T.font, fontSize: 12.5, color: T.muted, lineHeight: 1.5 }}>{l.desc}</span>
+          </div>
+          <div style={{ width: 4, height: 50, borderRadius: 2, background: l.color, opacity: 0.6 }} />
+        </motion.div>
+      ))}
+    </div>
+  </Slide>;
+}
+
+function IE11() {
+  return <Slide>
+    <SectionLabel>Layer 1 Deep Dive</SectionLabel>
+    <SlideTitle>Unified Context Infrastructure</SlideTitle>
+    <AmberLine />
+    <TwoCol ratio="1.3fr 1fr"
+      left={<div>
+        <Subtitle delay={0.3}>Right now, every team building agents rolls their own context stack. This mirrors the shadow IT crisis of the early cloud era — except agents don't just access data, they act on it.</Subtitle>
+        <BulletItem delay={0.5} icon="⚠" color={T.red}>One team pipes Slack through a custom RAG pipeline</BulletItem>
+        <BulletItem delay={0.6} icon="⚠" color={T.red}>Another manually exports Google Docs into a vector store</BulletItem>
+        <BulletItem delay={0.7} icon="⚠" color={T.red}>A third built MCP for Salesforce but not Jira</BulletItem>
+        <BulletItem delay={0.8} icon="⚠" color={T.red}>A fourth team doesn't know the other three exist</BulletItem>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.amber, marginTop: 14 }}>
+          ≈50% of orgs cite data searchability as top AI blocker (Deloitte 2025)
+        </motion.div>
+      </div>}
+      right={<div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.cyan, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Questions That Must Be Answered</motion.div>
+        {["Which systems become agent-accessible?", "Who decides what context an agent can see across departments?", "How do you version organizational knowledge?", "How do you handle conflicting institutional assumptions across teams?"].map((q, i) => (
+          <BulletItem key={i} delay={0.8 + i * 0.12} icon="?" color={T.cyan}>{q}</BulletItem>
+        ))}
+      </div>}
+    />
+  </Slide>;
+}
+
+function IE12() {
+  return <Slide>
+    <SectionLabel>Layer 2 Deep Dive</SectionLabel>
+    <SlideTitle>Coherent AI Worker Toolkit</SlideTitle>
+    <AmberLine />
+    <Subtitle>The difference between individual AI use and organizational AI leverage is enormous. One good hire vs. a system that makes everybody better.</Subtitle>
+    <TwoCol
+      left={<div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.red, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Today's Reality</motion.div>
+        {["Person A uses Claude for research + ChatGPT for drafting", "Person B uses Cursor for code + Perplexity for facts", "Person C built a custom LangGraph agent chain", "Person D is copy-pasting into a chat window", "None can articulate their workflow transferably"].map((s, i) => (
+          <BulletItem key={i} delay={0.5 + i * 0.1} icon="✕" color={T.red}>{s}</BulletItem>
+        ))}
+      </div>}
+      right={<div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.green, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>What's Needed</motion.div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <MetricCard value="30%" label="Gains from bolting AI onto existing workflows" color={T.muted} delay={0.7} />
+          <MetricCard value="300%" label="Gains from rethinking workflows around AI" color={T.green} delay={0.8} />
+        </div>
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}
+          style={{ fontFamily: T.font, fontSize: 13, color: T.muted, marginTop: 14, lineHeight: 1.5 }}>
+          Fluency doesn't scale through training alone. It scales through <span style={{ color: T.green, fontWeight: 600 }}>shared infrastructure</span> — sanctioned tools, capability maps, and organizational context.
+        </motion.p>
+      </div>}
+    />
+  </Slide>;
+}
+
+function IE13() {
+  return <Slide>
+    <SectionLabel>Layer 3 Deep Dive</SectionLabel>
+    <SlideTitle>Intent Engineering Proper</SlideTitle>
+    <AmberLine />
+    <Subtitle>OKRs were designed for people. They assume human judgment. Agents don't absorb culture through osmosis, all-hands meetings, or hallway conversations. They need explicit alignment before they start working.</Subtitle>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+      {[
+        { title: "Goal Translation", desc: "Not 'increase customer satisfaction.' Agent needs: What signals indicate satisfaction? What data sources? What actions am I authorized to take? What trade-offs can I make?", color: T.amber, icon: "🎯" },
+        { title: "Delegation Frameworks", desc: "Tenants translated into decision boundaries. When request X conflicts with policy Y — here's the resolution hierarchy. Encoded judgment, not rules.", color: T.cyan, icon: "⚖️" },
+        { title: "Feedback Loops", desc: "When an agent makes a decision, was it aligned with intent? How do we know? How do we measure and correct alignment drift over time?", color: T.green, icon: "🔄" },
+      ].map((c, i) => (
+        <motion.div key={i} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.2 }}
+          style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: "20px 18px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: c.color }} />
+          <div style={{ fontSize: 28, marginBottom: 8 }}>{c.icon}</div>
+          <div style={{ fontFamily: T.font, fontSize: 16, fontWeight: 700, color: T.white, marginBottom: 8 }}>{c.title}</div>
+          <div style={{ fontFamily: T.font, fontSize: 12.5, color: T.muted, lineHeight: 1.55 }}>{c.desc}</div>
+        </motion.div>
+      ))}
+    </div>
+  </Slide>;
+}
+
+function IE14() {
+  return <Slide>
+    <SectionLabel>The Human Agent vs. The AI Agent</SectionLabel>
+    <SlideTitle>What 5 Years of Osmosis Encodes</SlideTitle>
+    <AmberLine />
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
+        style={{ background: T.greenDim, border: `1px solid ${T.green}33`, borderRadius: 10, padding: "20px 18px" }}>
+        <div style={{ fontFamily: T.mono, fontSize: 11, color: T.green, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>Human Agent — 5 Years</div>
+        {["When to bend a policy", "When to spend 3 extra minutes on a frustrated customer", "When efficiency is right vs. when generosity is right", "Which metrics leadership actually cares about", "Stories veterans tell new hires", "Decisions managers make in ambiguous situations"].map((s, i) => (
+          <BulletItem key={i} delay={0.5 + i * 0.1} icon="✓" color={T.green}>{s}</BulletItem>
+        ))}
+      </motion.div>
+      <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}
+        style={{ background: T.redDim, border: `1px solid ${T.red}33`, borderRadius: 10, padding: "20px 18px" }}>
+        <div style={{ fontFamily: T.mono, fontSize: 11, color: T.red, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>AI Agent — Day One</div>
+        {["Has a prompt", "Has context", "Does NOT have intent", "Does NOT absorb culture through osmosis", "Does NOT learn from hallway conversations", "Will optimize for whatever it can measure"].map((s, i) => (
+          <BulletItem key={i} delay={0.7 + i * 0.1} icon="✕" color={T.red}>{s}</BulletItem>
+        ))}
+      </motion.div>
+    </div>
+  </Slide>;
+}
+
+function IE15() {
+  return <Slide>
+    <SectionLabel>Why This Hasn't Been Built</SectionLabel>
+    <SlideTitle>Three Structural Blockers</SlideTitle>
+    <AmberLine />
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {[
+        { num: "1", title: "It's Genuinely New", desc: "Before agents ran autonomously over weeks and months, we didn't need this. The human was the intent layer. Long-running agents break that model entirely.", color: T.amber },
+        { num: "2", title: "The Two Cultures Problem", desc: "People who understand organizational strategy (executives) aren't building agents. People building agents (engineers) don't understand organizational strategy. MIT found AI investment is still viewed as a tech challenge for the CIO.", color: T.cyan },
+        { num: "3", title: "It's Extremely Hard", desc: "Goals live in slide decks, half-read OKR documents, leadership principles cited in performance reviews but never operationalized, and the tacit knowledge of experienced employees. Nobody has strong muscles here.", color: T.red },
+      ].map((b, i) => (
+        <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.2 }}
+          style={{ display: "flex", gap: 18, padding: "16px 20px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 10 }}>
+          <div style={{ width: 44, height: 44, borderRadius: "50%", background: `${b.color}18`, border: `2px solid ${b.color}`, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: T.mono, fontSize: 18, fontWeight: 700, color: b.color, flexShrink: 0 }}>{b.num}</div>
+          <div>
+            <div style={{ fontFamily: T.font, fontSize: 16, fontWeight: 700, color: T.white, marginBottom: 4 }}>{b.title}</div>
+            <div style={{ fontFamily: T.font, fontSize: 13, color: T.muted, lineHeight: 1.55 }}>{b.desc}</div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </Slide>;
+}
+
+function IE16() {
+  return <Slide>
+    <SectionLabel>The Solution Architecture</SectionLabel>
+    <SlideTitle>What Must Be Built</SlideTitle>
+    <AmberLine />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+      {[
+        { title: "Infrastructure Level", items: ["Composable, vendor-agnostic architecture", "MCP as protocol layer + organizational decisions", "Data governance, access controls, freshness guarantees", "Treat like data warehouse strategy in 2010s — core strategic investment"], color: T.cyan, role: "AI Infrastructure Architect" },
+        { title: "Workflow Level", items: ["Organizational capability map for AI", "Which workflows are agent-ready vs. agent-augmented vs. human-only", "Living operating system, not a static Confluence doc", "Evolves as agent capabilities improve"], color: T.blue, role: "AI Workflow Architect" },
+        { title: "Alignment Level", items: ["Goal translation infrastructure", "Decision boundaries + escalation logic", "Value hierarchies for resolving trade-offs", "Feedback loops measuring alignment drift"], color: T.amber, role: "Intent Engineering Lead" },
+      ].map((c, i) => (
+        <motion.div key={i} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 + i * 0.2 }}
+          style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: "18px 16px", position: "relative", overflow: "hidden" }}>
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: c.color }} />
+          <div style={{ fontFamily: T.font, fontSize: 15, fontWeight: 700, color: T.white, marginBottom: 10 }}>{c.title}</div>
+          {c.items.map((item, j) => <BulletItem key={j} delay={0.6 + i * 0.2 + j * 0.08} icon="▸" color={c.color}>{item}</BulletItem>)}
+          <div style={{ marginTop: 10, padding: "6px 10px", background: `${c.color}12`, border: `1px solid ${c.color}33`, borderRadius: 6 }}>
+            <span style={{ fontFamily: T.mono, fontSize: 10, color: c.color, fontWeight: 600 }}>NEW ROLE: {c.role}</span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </Slide>;
+}
+
+function IE17() {
+  return <CSlide>
+    <SectionLabel delay={0}>The Race Has Changed</SectionLabel>
+    <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.8 }}
+      style={{ fontFamily: T.font, fontSize: 30, fontWeight: 700, color: T.white, lineHeight: 1.3, marginTop: 10, marginBottom: 20, maxWidth: 700 }}>
+      It's No Longer an <span style={{ color: T.muted, textDecoration: "line-through", textDecorationColor: `${T.muted}66` }}>Intelligence Race</span>.<br />
+      It's an <span style={{ color: T.amber }}>Intent Race</span>.
+    </motion.h1>
+    <AmberLine delay={0.8} width={300} />
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}
+      style={{ fontFamily: T.font, fontSize: 15, color: T.muted, maxWidth: 600, lineHeight: 1.65, marginBottom: 20 }}>
+      The frontier models — Opus 4.6, Gemini 3, GPT 5.2 — are all extraordinarily capable. The differences between them matter far less than the differences between organizations that give them clear, structured, goal-aligned intent and organizations that don't.
+    </motion.p>
+    <QuoteBlock d={1.4} text="A company with a mediocre model and extraordinary organizational intent infrastructure will outperform a company with a frontier model and fragmented, unaligned organizational knowledge. Every single time." author="Nate B. Jones" />
+  </CSlide>;
+}
+
+function IE18() {
+  return <CSlide>
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}
+      style={{ padding: "28px 44px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 12, position: "relative", marginBottom: 28 }}>
+      <div style={{ position: "absolute", top: -6, left: 40, fontSize: 36, color: T.amber, fontFamily: "Georgia, serif" }}>"</div>
+      <p style={{ fontFamily: T.font, fontSize: 18, color: T.white, lineHeight: 1.7, fontStyle: "italic", fontWeight: 500, maxWidth: 600 }}>
+        Context without intent is a loaded weapon with no target. We've spent years building AI systems. 2026 is the year we learn to aim them.
+      </p>
+      <p style={{ fontFamily: T.mono, fontSize: 11, color: T.amber, marginTop: 12 }}>— Nate B. Jones</p>
+    </motion.div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+      style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+      <PillTag color={T.muted} delay={1.6}>PROMPT → Talk to AI</PillTag>
+      <PillTag color={T.cyan} delay={1.8}>CONTEXT → What AI knows</PillTag>
+      <PillTag color={T.amber} delay={2.0}>INTENT → What AI wants</PillTag>
+    </motion.div>
+    <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.3, duration: 0.8 }}
+      style={{ height: 3, width: 200, background: T.amber, transformOrigin: "center", marginBottom: 18, boxShadow: `0 0 20px ${T.amberGlow}` }} />
+    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }}
+      style={{ fontFamily: T.font, fontSize: 15, color: T.muted, fontWeight: 500 }}>
+      Build for long-term intent. <span style={{ color: T.amber, fontWeight: 700 }}>The clock is running.</span>
+    </motion.p>
+  </CSlide>;
+}
+
+const IE_SLIDES = [IE01, IE02, IE03, IE04, IE05, IE06, IE07, IE08, IE09, IE10, IE11, IE12, IE13, IE14, IE15, IE16, IE17, IE18];
+
 // ═══════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════
+function PinGate({ onUnlock }) {
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => { inputRef.current?.focus(); }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (pin === "11601") {
+      onUnlock();
+    } else {
+      setError(true);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+      setTimeout(() => setError(false), 2000);
+      setPin("");
+    }
+  };
+
+  return (
+    <div style={{
+      width: "100vw", height: "100vh", background: T.bg, fontFamily: T.font,
+      display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden",
+    }}>
+      <GridBg />
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        style={{
+          position: "relative", zIndex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+          background: T.card, border: `1px solid ${T.border}`, borderRadius: 16,
+          padding: "48px 56px", backdropFilter: "blur(12px)",
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: T.amber, marginBottom: 12 }}
+        >
+          Restricted Access
+        </motion.div>
+        <motion.div
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          style={{ height: 2, width: 120, background: `linear-gradient(90deg, transparent, ${T.amber}, transparent)`, transformOrigin: "center", marginBottom: 24 }}
+        />
+        <motion.p
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+          style={{ fontFamily: T.font, fontSize: 14, color: T.muted, marginBottom: 28, textAlign: "center" }}
+        >
+          Enter PIN to continue
+        </motion.p>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+          <motion.div
+            animate={shake ? { x: [-12, 12, -8, 8, -4, 4, 0] } : {}}
+            transition={{ duration: 0.4 }}
+          >
+            <input
+              ref={inputRef}
+              type="password"
+              inputMode="numeric"
+              value={pin}
+              onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
+              maxLength={5}
+              style={{
+                width: 200, padding: "12px 20px", textAlign: "center",
+                fontFamily: T.mono, fontSize: 28, fontWeight: 700, letterSpacing: "0.3em",
+                color: error ? T.red : T.white,
+                background: "rgba(255,255,255,0.04)",
+                border: `2px solid ${error ? T.red + "88" : T.border}`,
+                borderRadius: 10, outline: "none",
+                transition: "border-color 0.3s, color 0.3s",
+              }}
+              onFocus={(e) => { if (!error) e.target.style.borderColor = T.amber + "88"; }}
+              onBlur={(e) => { if (!error) e.target.style.borderColor = T.border; }}
+            />
+          </motion.div>
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            style={{
+              fontFamily: T.mono, fontSize: 12, fontWeight: 700, letterSpacing: "0.1em",
+              color: T.bg, background: T.amber, border: "none", borderRadius: 8,
+              padding: "10px 36px", cursor: "pointer",
+              boxShadow: `0 0 20px ${T.amberGlow}`,
+            }}
+          >
+            UNLOCK
+          </motion.button>
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                style={{ fontFamily: T.mono, fontSize: 11, color: T.red, margin: 0 }}
+              >
+                Invalid PIN
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </form>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function PresentationHub() {
+  const [unlocked, setUnlocked] = useState(false);
   const [deck, setDeck] = useState("rebuttal");
   const [slide, setSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -942,18 +1523,17 @@ export default function PresentationHub() {
   const elapsedRef = useRef(null);
 
   const isRebuttal = deck === "rebuttal";
-  const scenes = isRebuttal ? PR_SCENES : FD_SLIDES;
+  const scenes = deck === "rebuttal" ? PR_SCENES : deck === "fdose" ? FD_SLIDES : IE_SLIDES;
   const total = scenes.length;
 
-  // Reset slide when switching decks
-  const switchDeck = (d) => {
+  const switchDeck = useCallback((d) => {
     setIsPlaying(false);
     clearTimeout(timerRef.current);
     clearInterval(elapsedRef.current);
     setDeck(d);
     setSlide(0);
     setElapsed(0);
-  };
+  }, []);
 
   const prev = useCallback(() => setSlide((s) => Math.max(0, s - 1)), []);
   const next = useCallback(() => {
@@ -967,6 +1547,7 @@ export default function PresentationHub() {
 
   // Autoplay for rebuttal deck
   useEffect(() => {
+    if (!unlocked) return;
     if (isPlaying && isRebuttal) {
       timerRef.current = setTimeout(next, PR_DURATIONS[slide]);
       elapsedRef.current = setInterval(() => setElapsed((e) => e + 100), 100);
@@ -975,27 +1556,34 @@ export default function PresentationHub() {
       clearTimeout(timerRef.current);
       clearInterval(elapsedRef.current);
     };
-  }, [isPlaying, slide, next, isRebuttal]);
+  }, [unlocked, isPlaying, slide, next, isRebuttal]);
 
-  const togglePlay = () => {
-    if (slide === total - 1 && !isPlaying) {
-      setSlide(0);
-      setElapsed(0);
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(!isPlaying);
-    }
-  };
+  const togglePlay = useCallback(() => {
+    setSlide((s) => {
+      if (s === total - 1) {
+        setElapsed(0);
+        setIsPlaying(true);
+        return 0;
+      }
+      setIsPlaying((p) => !p);
+      return s;
+    });
+  }, [total]);
 
   // Keyboard nav
   useEffect(() => {
+    if (!unlocked) return;
     const handler = (e) => {
       if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); next(); }
       if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [next, prev]);
+  }, [unlocked, next, prev]);
+
+  if (!unlocked) {
+    return <PinGate onUnlock={() => setUnlocked(true)} />;
+  }
 
   const CurrentSlide = scenes[slide];
 
