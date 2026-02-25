@@ -308,21 +308,27 @@ function PR1() {
 }
 
 function PR2() {
-  const deficits = ["No SOPs", "No LSWs", "No EOS Reporting", "No Knowledge Base", "No Onboarding", "No Technical Guidance"];
+  const deficits = [
+    { text: "No SOPs", warn: false }, { text: "No LSWs", warn: false }, { text: "No EOS Reporting", warn: false },
+    { text: "No Knowledge Base", warn: false }, { text: "No Onboarding", warn: false }, { text: "Minimal Technical Guidance", warn: true },
+  ];
   return (
     <Slide>
       <SectionLabel>The Starting Point</SectionLabel>
       <SlideTitle>October 21, 2024 — Day One.</SlideTitle>
       <AmberLine />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 36 }}>
-        {deficits.map((item, i) => (
-          <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.25 }}
-            style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", background: T.redDim, border: `1px solid ${T.red}33`, borderRadius: 6 }}>
-            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9 + i * 0.25, type: "spring" }}
-              style={{ color: T.red, fontSize: 18, fontWeight: 700 }}>✕</motion.span>
-            <span style={{ fontFamily: T.font, fontSize: 15, color: T.white, textDecoration: "line-through", textDecorationColor: T.red + "88" }}>{item}</span>
-          </motion.div>
-        ))}
+        {deficits.map((item, i) => {
+          const isWarn = item.warn;
+          return (
+            <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.25 }}
+              style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", background: isWarn ? T.amberDim : T.redDim, border: `1px solid ${isWarn ? T.amber + "33" : T.red + "33"}`, borderRadius: 6 }}>
+              <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.9 + i * 0.25, type: "spring" }}
+                style={{ color: isWarn ? T.amber : T.red, fontSize: 18, fontWeight: 700 }}>{isWarn ? "⚠" : "✕"}</motion.span>
+              <span style={{ fontFamily: T.font, fontSize: 15, color: T.white, textDecoration: isWarn ? "none" : "line-through", textDecorationColor: T.red + "88" }}>{item.text}</span>
+            </motion.div>
+          );
+        })}
       </div>
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 3.0, duration: 0.8 }} style={{ textAlign: "center" }}>
         <span style={{ fontFamily: T.font, fontSize: 22, color: T.white, fontWeight: 500 }}>
@@ -345,8 +351,8 @@ function PR3() {
   ];
   return (
     <Slide>
-      <SectionLabel>What I Built</SectionLabel>
-      <SlideTitle>14 Months. From Scratch.</SlideTitle>
+      <SectionLabel>Taking Initiative</SectionLabel>
+      <SlideTitle>14 Months of Ownership.</SlideTitle>
       <AmberLine />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 28 }}>
         {items.map((item, i) => (
@@ -361,7 +367,7 @@ function PR3() {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.8 }}
         style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, padding: "14px 28px", background: T.amberDim, border: `1px solid ${T.amber}44`, borderRadius: 8, width: "fit-content", margin: "0 auto" }}>
         <span style={{ fontFamily: T.mono, fontSize: 36, fontWeight: 700, color: T.amber }}><AnimatedCounter target={10} delay={3000} duration={1500} /></span>
-        <span style={{ fontFamily: T.font, fontSize: 16, color: T.white, fontWeight: 500 }}>systems built from nothing</span>
+        <span style={{ fontFamily: T.font, fontSize: 16, color: T.white, fontWeight: 500 }}>instances of taking initiative to solve problems</span>
       </motion.div>
     </Slide>
   );
@@ -369,15 +375,15 @@ function PR3() {
 
 function PR4() {
   const deliverables = [
-    { label: "Putaway Logic", result: "Zero Defects" }, { label: "PA Code Validation", result: "Seamless" },
-    { label: "GS1 Parsing", result: "Zero Issues" }, { label: "ERP Phase 2", result: "Delivered" },
-    { label: "Layerpick Thresholds", result: "Complete" }, { label: "RCH Logic", result: "Deployed" },
-    { label: "MDF Cleanup", result: "Resolved" },
+    { label: "Putaway Logic", result: "Owned & Delivered" }, { label: "PA Code Validation", result: "Owned & Delivered" },
+    { label: "GS1 Parsing", result: "Owned & Delivered" }, { label: "ERP Phase 2", result: "Owned & Delivered" },
+    { label: "Layerpick Thresholds", result: "Owned & Delivered" }, { label: "RCH Logic", result: "Owned & Delivered" },
+    { label: "MDF Cleanup", result: "Owned & Resolved" },
   ];
   return (
     <Slide>
       <SectionLabel>2025 Technical Deliverables</SectionLabel>
-      <SlideTitle>Shipped. Verified. Zero Defect.</SlideTitle>
+      <SlideTitle>Identified. Owned. Delivered.</SlideTitle>
       <AmberLine />
       <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
         {deliverables.map((d, i) => (
@@ -392,7 +398,7 @@ function PR4() {
       </div>
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 3.0, duration: 0.6 }}
         style={{ padding: "12px 24px", background: T.greenDim, border: `1px solid ${T.green}66`, borderRadius: 8, textAlign: "center" }}>
-        <span style={{ fontFamily: T.font, fontSize: 16, fontWeight: 700, color: T.green }}>Zero Post-Launch Defects on Major Releases</span>
+        <span style={{ fontFamily: T.font, fontSize: 16, fontWeight: 700, color: T.green }}>Full Ownership From Identification Through Deployment</span>
       </motion.div>
     </Slide>
   );
@@ -476,19 +482,25 @@ function PR6() {
 }
 
 function PR7() {
-  const steps = ["Critical SQL", "No Code Review", "No QA Environment", "No Technical Peer", "Production"];
+  const steps = [
+    { text: "Critical SQL", type: "neutral" },
+    { text: "Limited Peer Review", type: "gap" },
+    { text: "No Staging Environment", type: "gap" },
+    { text: "Bandwidth Constraints", type: "gap" },
+    { text: "Production", type: "neutral" },
+  ];
   return (
     <Slide>
-      <SectionLabel>The Gap</SectionLabel>
-      <SlideTitle>Right First Time — Without the Safety Net.</SlideTitle>
+      <SectionLabel>Process Validation Gaps</SectionLabel>
+      <SlideTitle>Delivering Through Bandwidth Constraints.</SlideTitle>
       <AmberLine />
       <div style={{ display: "flex", alignItems: "center", gap: 0, marginBottom: 36, flexWrap: "wrap", justifyContent: "center" }}>
         {steps.map((step, i) => (
           <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.3 }} style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ padding: "10px 16px", background: i === 0 || i === 4 ? T.card : T.redDim, border: `1px solid ${i === 0 || i === 4 ? T.border : T.red + "44"}`, borderRadius: 6, position: "relative" }}>
-              <span style={{ fontFamily: T.mono, fontSize: 13, color: i === 0 || i === 4 ? T.white : T.red, fontWeight: 600 }}>{step}</span>
-              {i > 0 && i < 4 && (
-                <motion.div animate={{ boxShadow: [`0 0 4px ${T.red}33`, `0 0 12px ${T.red}66`, `0 0 4px ${T.red}33`] }}
+            <div style={{ padding: "10px 16px", background: step.type === "gap" ? T.amberDim : T.card, border: `1px solid ${step.type === "gap" ? T.amber + "44" : T.border}`, borderRadius: 6, position: "relative" }}>
+              <span style={{ fontFamily: T.mono, fontSize: 13, color: step.type === "gap" ? T.amber : T.white, fontWeight: 600 }}>{step.text}</span>
+              {step.type === "gap" && (
+                <motion.div animate={{ boxShadow: [`0 0 4px ${T.amber}22`, `0 0 10px ${T.amber}44`, `0 0 4px ${T.amber}22`] }}
                   transition={{ duration: 1.5, repeat: Infinity }} style={{ position: "absolute", inset: -1, borderRadius: 6, pointerEvents: "none" }} />
               )}
             </div>
@@ -500,11 +512,10 @@ function PR7() {
         ))}
       </div>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 3.0, duration: 0.8 }}
-        style={{ padding: "16px 28px", background: T.greenDim, border: `1px solid ${T.green}55`, borderRadius: 8, textAlign: "center" }}>
-        <motion.span animate={{ textShadow: [`0 0 4px ${T.green}33`, `0 0 14px ${T.green}55`, `0 0 4px ${T.green}33`] }}
-          transition={{ duration: 2, repeat: Infinity }} style={{ fontFamily: T.font, fontSize: 18, fontWeight: 700, color: T.green }}>
-          My Record: Zero-Defect Deployments on Major Releases
-        </motion.span>
+        style={{ padding: "16px 28px", background: T.amberDim, border: `1px solid ${T.amber}55`, borderRadius: 8, textAlign: "center" }}>
+        <span style={{ fontFamily: T.font, fontSize: 15, color: T.amber, fontWeight: 600 }}>
+          Code & document review processes limited by team bandwidth — an opportunity for structured improvement, not a reflection of individual effort.
+        </span>
       </motion.div>
     </Slide>
   );
@@ -551,7 +562,7 @@ function PR9() {
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.0, duration: 1 }}>
           <p style={{ fontFamily: T.font, fontSize: 18, color: T.white, lineHeight: 1.7, fontWeight: 500 }}>
-            <span style={{ color: T.amber, fontWeight: 700 }}>14 months.</span> Degraded baseline. Built everything.<br />
+            <span style={{ color: T.amber, fontWeight: 700 }}>14 months.</span> Challenging baseline. Always building, always improving.<br />
             Ready for the next level — <span style={{ color: T.amber }}>with the right support to get there.</span>
           </p>
         </motion.div>
