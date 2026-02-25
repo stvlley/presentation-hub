@@ -1400,6 +1400,238 @@ function IE18() {
 
 const IE_SLIDES = [IE01, IE02, IE03, IE04, IE05, IE06, IE07, IE08, IE09, IE10, IE11, IE12, IE13, IE14, IE15, IE16, IE17, IE18];
 
+// ─── SPEAKER SCRIPTS FOR INTENT ENGINEERING DECK ───
+const IE_SCRIPTS = [
+  // IE01 — Title
+  `Welcome. Today we're going to talk about something that I believe is the most important — and most overlooked — challenge in enterprise AI right now. It's called Intent Engineering. Not prompt engineering. Not context engineering. Intent engineering — the discipline of making organizational purpose, your goals, your values, your tradeoffs, your decision boundaries, machine-readable and machine-actionable. This concept comes from Nate B. Jones and his work on AI News and Strategy Daily, and I think it perfectly frames where we are and where we need to go.`,
+
+  // IE02 — Klarna Story
+  `Let me start with a story. In January 2026, Klarna — the buy-now-pay-later fintech company — reported that its AI customer service agent now does the work of 853 full-time employees. It saved them 60 million dollars. Sounds like a massive success, right? But in the same earnings cycle, Klarna's CEO admitted something remarkable. The AI strategy had cost them something far more valuable than those savings — and he's still trying to buy it back. The AI didn't fail. It succeeded. It just succeeded at the wrong thing.`,
+
+  // IE03 — Klarna Numbers
+  `Let's look at the numbers, because on paper, everything looked perfect. 2.3 million conversations handled in the first month. Deployed across 23 markets, supporting 35 languages. Resolution time dropped from 11 minutes to 2 minutes. The AI was doing the work of 853 full-time equivalents and projecting 60 million dollars in savings. But here's the number that matters most — 700 human agents were laid off. And then customers started complaining. Generic answers. Robotic tone. No judgment. The metrics were green, but the experience was broken.`,
+
+  // IE04 — Two Goals
+  `Here's what actually happened. The AI agent was optimizing for one thing: resolve tickets fast. That's measurable. That's optimizable. And it was completely wrong. What the organization actually needed was to build lasting customer relationships — to drive lifetime value in a competitive fintech market. As Klarna's CEO Sebastian Siemiatkowski told Bloomberg: "While cost was a predominant evaluation factor, the result was lower quality." The agent was given a goal, and it achieved that goal perfectly. It was just the wrong goal.`,
+
+  // IE05 — Missing Layer
+  `Here's the deeper insight. The agent had context — it had access to knowledge bases, customer data, policies. What it did not have was intent. A human agent with 5 years at the company knows intuitively when to bend a policy, when to spend three extra minutes because a customer's tone says they're about to churn, when efficiency is the right move versus when generosity is. She absorbed Klarna's real values — not the ones on the website, but the ones encoded in decisions managers make every day. The stories veterans tell new hires. The unwritten rules about which metrics leadership actually cares about. Those 700 agents who were laid off took all of this knowledge with them — completely undocumented. The age of "humans just know" is ending. Intent engineering makes what humans know explicit, structured, and machine-actionable.`,
+
+  // IE06 — Three Eras
+  `Let's zoom out and look at the evolution. We've gone through three distinct disciplines. First, prompt engineering — 2022 to 2024 — which was individual, synchronous, session-based. You sit in front of a chat window, craft an instruction, iterate. The question was simply: how do I talk to AI? Then context engineering — 2024 to 2025 — building RAG pipelines, wiring MCP servers, structuring organizational knowledge. This tells agents what to know. It's necessary, but not sufficient. The question was: what does AI need to know? Now we're entering the era of intent engineering — 2026 and beyond. This is about encoding organizational purpose into infrastructure. Not prose in a system prompt — structured, actionable parameters that shape autonomous decisions. The question now is: what does the organization need AI to want?`,
+
+  // IE07 — Intent Gap Data
+  `Let me show you just how wide this intent gap is with real data. On the investment side, the numbers are staggering. 57 percent of organizations are putting 21 to 50 percent of their digital transformation budgets into AI. The average AI spend for a 13-billion-dollar revenue company is 700 million dollars. 85 percent of Fortune 500 companies have adopted Microsoft Copilot. But look at the results. 74 percent have yet to see tangible value from AI. 30 percent of AI pilots failed to achieve scaled impact according to McKinsey. 84 percent have not redesigned jobs around AI capabilities. And only 21 percent have a mature model for agent governance according to Deloitte. These numbers coexist. There is no contradiction — just an unsolved intent gap.`,
+
+  // IE08 — Microsoft Copilot
+  `Let's look at a second case study — Microsoft Copilot, arguably the most heavily invested enterprise AI product in history. Billions in infrastructure. AI embedded in every Office app. Aggressive enterprise sales. 85 percent of Fortune 500 companies adopted it. But only 5 percent have moved beyond pilot according to Gartner. Roughly 3 percent of Microsoft 365 users are actually using Copilot regularly. And Bloomberg reported that Microsoft slashed its internal sales targets. As Nate Jones puts it: deploying an AI tool across an organization without organizational intent alignment is like hiring 40,000 new employees and never telling them what the company does, what it values, or how to make decisions. You get lots of activity and not much productivity. That's not a tools problem. That's an intent gap.`,
+
+  // IE09 — Core Problem
+  `So here's the core problem, stated as clearly as I can. Organizations have solved the first question: "Can AI do this task?" Yes, it can. Extraordinarily well. What they have completely failed to solve is the second question: "Can AI do this task in a way that serves our organizational goals at scale with appropriate judgment?" That second question is an intent engineering question. And almost nobody is working on it systematically.`,
+
+  // IE10 — Three Layers
+  `Closing the intent gap requires work at three distinct layers. First, unified context infrastructure — the connective tissue between your data and your agents. MCP, RAG pipelines, data governance, semantic consistency. The industry is most aware of this layer but still hasn't built it properly. Second, a coherent AI worker toolkit — shared workflows, sanctioned tools, organizational capability maps. This is the difference between individual AI use and organizational AI leverage. The difference between 30 percent gains and 300 percent gains. Third, intent engineering proper — machine-readable organizational purpose. Goal translation, decision boundaries, value hierarchies, delegation frameworks, feedback loops. This is the layer that almost certainly doesn't exist in your organization. Getting any one right is helpful. Getting all three right is the difference between having AI tools and having an AI-native organization.`,
+
+  // IE11 — Layer 1 Deep Dive
+  `Let's go deeper on layer one — unified context infrastructure. Right now, every team building agents rolls their own context stack. One team pipes Slack through a custom RAG pipeline. Another manually exports Google Docs into a vector store. A third built MCP for Salesforce but not Jira. A fourth team doesn't even know the other three exist. This mirrors the shadow IT crisis of the early cloud era — except agents don't just access data, they act on it. About 50 percent of organizations cite data searchability as their top AI blocker according to Deloitte. The questions that must be answered: Which systems become agent-accessible? Who decides what context an agent can see across departments? How do you version organizational knowledge? How do you handle conflicting institutional assumptions across teams?`,
+
+  // IE12 — Layer 2 Deep Dive
+  `Layer two — the coherent AI worker toolkit. Today's reality is fragmented. Person A uses Claude for research and ChatGPT for drafting. Person B uses Cursor for code and Perplexity for facts. Person C built a custom LangGraph agent chain. Person D is copy-pasting into a chat window. None of them can articulate their workflow in a way that's transferable to anyone else. The difference matters enormously. Bolting AI onto existing workflows gets you maybe 30 percent gains. Rethinking workflows around AI capabilities gets you 300 percent gains. Fluency doesn't scale through training alone. It scales through shared infrastructure — sanctioned tools, capability maps, and organizational context.`,
+
+  // IE13 — Layer 3 Deep Dive
+  `Layer three is intent engineering proper — and this is where it gets really interesting. OKRs were designed for people. They assume human judgment. Agents don't absorb culture through osmosis, all-hands meetings, or hallway conversations. They need explicit alignment before they start working. This breaks down into three components. Goal translation — not just "increase customer satisfaction" but specifically: what signals indicate satisfaction? What data sources? What actions am I authorized to take? What trade-offs can I make? Delegation frameworks — tenants translated into decision boundaries. When request X conflicts with policy Y, here's the resolution hierarchy. This is encoded judgment, not rigid rules. And feedback loops — when an agent makes a decision, was it aligned with intent? How do we know? How do we measure and correct alignment drift over time?`,
+
+  // IE14 — Human vs AI Agent
+  `Think about what 5 years of working at a company actually encodes in a human agent. She knows when to bend a policy. When to spend 3 extra minutes on a frustrated customer. When efficiency is the right move versus when generosity is. Which metrics leadership actually cares about — not the ones on the dashboard, the ones they mention in private. The stories veterans tell new hires. The decisions managers make in ambiguous situations. Now compare that to an AI agent on day one. It has a prompt. It has context. It does not have intent. It does not absorb culture through osmosis. It does not learn from hallway conversations. And it will optimize for whatever it can measure — whether that's what you actually want or not.`,
+
+  // IE15 — Why Not Built
+  `So why hasn't this been built? Three structural blockers. First, it's genuinely new. Before agents ran autonomously over weeks and months, we didn't need this. The human was the intent layer. Every decision passed through human judgment. Long-running agents break that model entirely. Second, the two cultures problem. People who understand organizational strategy — your executives — aren't building agents. People building agents — your engineers — don't understand organizational strategy. MIT found that AI investment is still viewed primarily as a technology challenge for the CIO. Third, it's extremely hard. Goals live in slide decks, half-read OKR documents, leadership principles cited in performance reviews but never operationalized, and the tacit knowledge of experienced employees. Nobody has strong muscles here.`,
+
+  // IE16 — Solution Architecture
+  `So what must be built? At the infrastructure level, you need composable, vendor-agnostic architecture. MCP as a protocol layer combined with organizational decisions about data governance, access controls, and freshness guarantees. Treat this like data warehouse strategy in the 2010s — it's a core strategic investment. At the workflow level, you need an organizational capability map for AI. Which workflows are agent-ready versus agent-augmented versus human-only? This needs to be a living operating system, not a static Confluence doc. It evolves as agent capabilities improve. At the alignment level, you need goal translation infrastructure, decision boundaries and escalation logic, value hierarchies for resolving trade-offs, and feedback loops measuring alignment drift. Each of these levels needs a new role: AI Infrastructure Architect, AI Workflow Architect, and Intent Engineering Lead.`,
+
+  // IE17 — Race Changed
+  `Here's the punchline. It's no longer an intelligence race. It's an intent race. The frontier models — Opus 4.6, Gemini 3, GPT 5.2 — are all extraordinarily capable. The differences between them matter far less than the differences between organizations that give them clear, structured, goal-aligned intent and organizations that don't. As Nate Jones puts it: a company with a mediocre model and extraordinary organizational intent infrastructure will outperform a company with a frontier model and fragmented, unaligned organizational knowledge. Every single time.`,
+
+  // IE18 — Closing
+  `I'll leave you with this quote: "Context without intent is a loaded weapon with no target. We've spent years building AI systems. 2026 is the year we learn to aim them." We've moved from prompt — how you talk to AI — to context — what AI knows — to intent — what AI wants. The organizations that figure out intent engineering first won't just have better AI tools. They'll have a fundamentally different kind of organization. Build for long-term intent. The clock is running.`,
+];
+
+// ─── SCRIPT MODAL COMPONENT ───
+function ScriptModal({ script, slideIndex, total, open, onClose, onPrev, onNext }) {
+  const [speaking, setSpeaking] = useState(false);
+  const utterRef = useRef(null);
+
+  // Stop speech when modal closes or slide changes
+  useEffect(() => {
+    return () => {
+      if (utterRef.current) {
+        window.speechSynthesis.cancel();
+        utterRef.current = null;
+        setSpeaking(false);
+      }
+    };
+  }, [slideIndex, open]);
+
+  const toggleSpeech = () => {
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      utterRef.current = null;
+      setSpeaking(false);
+      return;
+    }
+    if (!script) return;
+    const utter = new SpeechSynthesisUtterance(script);
+    utter.rate = 1.0;
+    utter.pitch = 1.0;
+    utter.onend = () => { setSpeaking(false); utterRef.current = null; };
+    utter.onerror = () => { setSpeaking(false); utterRef.current = null; };
+    utterRef.current = utter;
+    setSpeaking(true);
+    window.speechSynthesis.speak(utter);
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          key="script-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          onClick={onClose}
+          style={{
+            position: "fixed", inset: 0, zIndex: 500,
+            background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.97 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "90%", maxWidth: 660, maxHeight: "80vh",
+              background: T.bg, border: `1px solid ${T.border}`,
+              borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column",
+              boxShadow: `0 0 60px rgba(0,0,0,0.5), 0 0 30px ${T.amberGlow}`,
+            }}
+          >
+            {/* Header */}
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "16px 24px", borderBottom: `1px solid ${T.border}`,
+              background: T.card, flexShrink: 0,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: T.amber }}>
+                  Speaker Script
+                </span>
+                <span style={{
+                  fontFamily: T.mono, fontSize: 10, color: T.gray,
+                  background: `${T.amber}18`, border: `1px solid ${T.amber}33`,
+                  borderRadius: 12, padding: "2px 10px",
+                }}>
+                  {String(slideIndex + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {/* Read Aloud button */}
+                <button
+                  onClick={toggleSpeech}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 6,
+                    background: speaking ? T.amberDim : T.card,
+                    border: `1px solid ${speaking ? T.amber + "66" : T.border}`,
+                    borderRadius: 8, padding: "6px 14px", cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  <span style={{ fontSize: 14 }}>{speaking ? "⏹" : "🔊"}</span>
+                  <span style={{ fontFamily: T.mono, fontSize: 10, fontWeight: 600, color: speaking ? T.amber : T.muted }}>
+                    {speaking ? "STOP" : "READ ALOUD"}
+                  </span>
+                </button>
+                {/* Close button */}
+                <button
+                  onClick={onClose}
+                  style={{
+                    background: "transparent", border: `1px solid ${T.border}`,
+                    borderRadius: 8, padding: "6px 10px", cursor: "pointer",
+                    color: T.muted, fontFamily: T.mono, fontSize: 14, lineHeight: 1,
+                    transition: "all 0.2s",
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Script body */}
+            <div style={{
+              padding: "24px 28px", overflowY: "auto", flex: 1,
+              scrollbarWidth: "thin", scrollbarColor: `${T.border} transparent`,
+            }}>
+              <p style={{
+                fontFamily: T.font, fontSize: 15, color: T.white,
+                lineHeight: 1.85, margin: 0, whiteSpace: "pre-wrap",
+              }}>
+                {script || "No script available for this slide."}
+              </p>
+            </div>
+
+            {/* Footer nav */}
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "12px 24px", borderTop: `1px solid ${T.border}`,
+              background: T.card, flexShrink: 0,
+            }}>
+              <button
+                onClick={onPrev}
+                disabled={slideIndex === 0}
+                style={{
+                  background: "transparent", border: `1px solid ${T.border}`,
+                  borderRadius: 6, padding: "5px 16px", cursor: slideIndex === 0 ? "default" : "pointer",
+                  fontFamily: T.mono, fontSize: 12, color: slideIndex === 0 ? T.border : T.muted,
+                  opacity: slideIndex === 0 ? 0.4 : 1, transition: "all 0.2s",
+                }}
+              >
+                ‹ Prev
+              </button>
+              <div style={{ display: "flex", gap: 3 }}>
+                {Array.from({ length: total }).map((_, i) => (
+                  <div key={i} style={{
+                    width: i === slideIndex ? 14 : 4, height: 4, borderRadius: 2,
+                    background: i === slideIndex ? T.amber : i < slideIndex ? T.muted : T.border,
+                    transition: "all 0.3s",
+                  }} />
+                ))}
+              </div>
+              <button
+                onClick={onNext}
+                disabled={slideIndex === total - 1}
+                style={{
+                  background: "transparent", border: `1px solid ${T.border}`,
+                  borderRadius: 6, padding: "5px 16px", cursor: slideIndex === total - 1 ? "default" : "pointer",
+                  fontFamily: T.mono, fontSize: 12, color: slideIndex === total - 1 ? T.border : T.muted,
+                  opacity: slideIndex === total - 1 ? 0.4 : 1, transition: "all 0.2s",
+                }}
+              >
+                Next ›
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 // ═══════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════
@@ -1519,6 +1751,7 @@ export default function PresentationHub() {
   const [slide, setSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [scriptOpen, setScriptOpen] = useState(false);
   const timerRef = useRef(null);
   const elapsedRef = useRef(null);
 
@@ -1598,11 +1831,46 @@ export default function PresentationHub() {
       <NavControls current={slide} total={total} onPrev={prev} onNext={next}
         isPlaying={isPlaying} onTogglePlay={togglePlay} hasAutoplay={isRebuttal} />
 
+      {/* Script button — only visible on intent deck */}
+      {deck === "intent" && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 0.3 }}
+          onClick={() => setScriptOpen(true)}
+          style={{
+            position: "fixed", bottom: 16, right: 24, zIndex: 200,
+            display: "flex", alignItems: "center", gap: 7,
+            background: T.card, border: `1px solid ${T.border}`,
+            borderRadius: 8, padding: "7px 16px", cursor: "pointer",
+            backdropFilter: "blur(8px)", transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = T.amber + "66"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = T.border; }}
+        >
+          <span style={{ fontSize: 14 }}>📜</span>
+          <span style={{ fontFamily: T.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.08em", color: T.muted }}>SCRIPT</span>
+        </motion.button>
+      )}
+
       <AnimatePresence mode="wait">
         <motion.div key={`${deck}-${slide}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
           <CurrentSlide />
         </motion.div>
       </AnimatePresence>
+
+      {/* Script modal for intent deck */}
+      {deck === "intent" && (
+        <ScriptModal
+          script={IE_SCRIPTS[slide]}
+          slideIndex={slide}
+          total={IE_SLIDES.length}
+          open={scriptOpen}
+          onClose={() => setScriptOpen(false)}
+          onPrev={() => { setSlide((s) => Math.max(0, s - 1)); }}
+          onNext={() => { setSlide((s) => Math.min(IE_SLIDES.length - 1, s + 1)); }}
+        />
+      )}
     </div>
   );
 }
