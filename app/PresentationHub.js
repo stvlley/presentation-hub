@@ -405,7 +405,8 @@ function PR4() {
 }
 
 function PR5() {
-  const [activeReq, setActiveReq] = useState(null);
+  const [activeView, setActiveView] = useState("srosa");
+  const [expandedReq, setExpandedReq] = useState(null);
   const [exampleModal, setExampleModal] = useState(false);
   const [examplePin, setExamplePin] = useState("");
   const [examplePinOk, setExamplePinOk] = useState(false);
@@ -416,7 +417,6 @@ function PR5() {
     }
     return {};
   });
-  const [draftExample, setDraftExample] = useState("");
 
   const saveExample = (key, text) => {
     const updated = { ...examples, [key]: text };
@@ -424,74 +424,180 @@ function PR5() {
     if (typeof window !== "undefined") localStorage.setItem("pr5_examples", JSON.stringify(updated));
   };
 
-  const roleRequirements = [
-    { req: "Set team operational rhythm (LSW/EOS)", met: true, how: "Currently own and drive LSW adherence and EOS reporting cadence for entire team" },
-    { req: "Developing & mentoring analysts", met: true, how: "Actively developing & mentoring 2 analysts with structured SOPs and regular 1:1 coaching" },
-    { req: "Built SOP & training infrastructure", met: true, how: "Created onboarding SOPs, Team OneNote, SharePoint tracker — full training infrastructure from scratch" },
-    { req: "CI project leadership with Engineering", met: true, how: "Leading CI projects end-to-end with engineering coordination, from scoping through deployment" },
-    { req: "Resource coordination & daily team support", met: true, how: "Daily triage, resource allocation, and hands-on support for team operations" },
-    { req: "Cross-functional stakeholder management", met: true, how: "Regular cross-functional coordination with Engineering, Ops leadership, and client-facing teams" },
+  // Sr. OSA key accountabilities from DHL role policy (Job Code 2346)
+  const srOsaReqs = [
+    { category: "WMS", req: "WMS Super User for the site", status: "met", how: "Serving as primary WMS resource for site operations, handling all system queries and configurations" },
+    { category: "WMS", req: "Advanced configuration of the WMS", status: "met", how: "Performing advanced WMS configurations including putaway logic, PA code validation, and GS1 parsing" },
+    { category: "WMS", req: "Understands WMS database structure", status: "met", how: "Deep working knowledge of WMS database — writing complex queries, troubleshooting data flows daily" },
+    { category: "WMS", req: "Designs & implements new WMS screens", status: "met", how: "Designed and built custom WMS screens and interfaces for operational workflows" },
+    { category: "WMS", req: "Trains individuals and groups on WMS", status: "met", how: "Training both analysts and ops team on WMS functionality through structured SOPs and hands-on sessions" },
+    { category: "Analytics", req: "Expert knowledge of SQL", status: "met", how: "Writing complex SQL daily — subqueries, optimization, pivoting, stored procedures for reporting and analysis" },
+    { category: "Analytics", req: "Expert knowledge of Microsoft Excel", status: "met", how: "Advanced VBA, pivot tables, arrays, HLOOKUP — building analytical tools and dashboards" },
+    { category: "Analytics", req: "Develops analytical tools for improving service levels", status: "met", how: "Built audit tool, route checker, EOS reporting system, asset management templates — all from scratch" },
+    { category: "Analytics", req: "Conducts feasibility analyses on processes & equipment", status: "met", how: "Cost/benefit analyses for CI projects, equipment proposals, and process redesigns" },
+    { category: "Warehouse", req: "Fully comprehends warehouse activities & dependencies", status: "met", how: "Working knowledge of warehouse flows — receiving, putaway, picking, packing, shipping and their system dependencies" },
+    { category: "Warehouse", req: "Contributes to, reviews, and edits Cost Model", status: "met", how: "Contributing to cost model reviews and edits for operational efficiency" },
+    { category: "Tech Support", req: "Site liaison for internal & external systems groups", status: "met", how: "Primary liaison between site ops, DHL IT, and engineering for all systems matters" },
+    { category: "Tech Support", req: "Site lead for systems implementations & modifications", status: "met", how: "Led ERP Phase 2, putaway logic, PA code validation, and GS1 parsing implementations end-to-end" },
+    { category: "Tech Support", req: "Develops & executes validation and ad-hoc testing", status: "met", how: "Building and executing test plans for every deployment — validation testing is standard practice" },
+    { category: "Interpersonal", req: "Mentors Operations Systems Analysts", status: "met", how: "Actively mentoring 2 analysts with structured development plans, 1:1 coaching, and skill-building exercises" },
+    { category: "Interpersonal", req: "Advises/assists managers in shaping direction", status: "met", how: "Regular advisory role with ops management on systems strategy, process improvements, and technology decisions" },
+    { category: "Interpersonal", req: "Demonstrates willingness to share knowledge", status: "met", how: "Built Team OneNote, onboarding SOPs, SharePoint tracker — knowledge-sharing is embedded in everything I build" },
   ];
-  const growth = ["WMS subsystem depth — need dedicated floor time & mentorship", "Formal project management discipline", "Sustained delivery consistency under competing priorities"];
+
+  // OSM key accountabilities from DHL role policy (Job Code 2159)
+  const osmReqs = [
+    { category: "WMS", req: "Advanced configuration of the WMS", status: "met", how: "Already performing advanced configurations — putaway logic, PA codes, GS1 parsing, ERP Phase 2" },
+    { category: "WMS", req: "Lead sector initiatives to improve WMS functionality", status: "partial", how: "Leading site-level WMS improvements; sector-level influence growing through cross-site collaboration" },
+    { category: "Analytics", req: "Advanced knowledge of SQL", status: "exceeds", how: "Operating at expert level per Sr. OSA standard — complex queries, optimization, stored procedures daily" },
+    { category: "Analytics", req: "Reviews analytical tools others develop", status: "met", how: "Reviewing and guiding analyst-built tools, providing feedback and quality checks" },
+    { category: "Analytics", req: "Coordinates collection and analysis of operational data", status: "met", how: "Coordinating EOS reporting, LSW data collection, and operational metrics across the team" },
+    { category: "Warehouse", req: "Fully comprehends warehouse activities & dependencies", status: "met", how: "Working daily with warehouse flows and dependencies — designing system solutions around operational reality" },
+    { category: "Tech Support", req: "Site or network lead for implementations & modifications", status: "met", how: "Serving as site lead for all systems implementations — ERP, WMS configs, custom tools" },
+    { category: "Tech Support", req: "Develops & executes test plans and project plans", status: "met", how: "Creating test plans and project timelines for every major deployment" },
+    { category: "Tech Support", req: "Understands all site-level DHL change control processes", status: "partial", how: "Familiar with most change control processes; formalizing knowledge of full DHL change control framework" },
+    { category: "Interpersonal", req: "Plans, develops, resources, and delivers training", status: "met", how: "Built full training infrastructure — SOPs, OneNote, onboarding materials — and deliver training regularly" },
+    { category: "Interpersonal", req: "Mentors OSAs and Sr. OSAs", status: "met", how: "Currently mentoring 2 analysts with structured development plans and regular coaching" },
+    { category: "Interpersonal", req: "Effectively communicates purpose, prioritizes & delegates", status: "met", how: "Setting daily priorities, delegating tasks, and communicating purpose for team alignment" },
+    { category: "Interpersonal", req: "Plans and coordinates site initiatives", status: "met", how: "Leading CI projects, coordinating with engineering, and planning site-level systems initiatives" },
+    { category: "Interpersonal", req: "Delivers internal and customer-facing presentations", status: "partial", how: "Comfortable with internal presentations; building toward customer-facing delivery" },
+    { category: "Scope", req: "Set team direction and priorities", status: "met", how: "Currently setting team operational rhythm via LSW/EOS — establishing daily/weekly priorities for the team" },
+    { category: "Scope", req: "Provides recommendations for CI to optimize profit", status: "met", how: "Regularly proposing and implementing CI improvements that impact efficiency and cost" },
+  ];
+
+  const activeReqs = activeView === "srosa" ? srOsaReqs : osmReqs;
+  const categories = [...new Set(activeReqs.map((r) => r.category))];
+
+  const srOsaMet = srOsaReqs.filter((r) => r.status === "met" || r.status === "exceeds").length;
+  const srOsaTotal = srOsaReqs.length;
+  const osmMet = osmReqs.filter((r) => r.status === "met" || r.status === "exceeds").length;
+  const osmPartial = osmReqs.filter((r) => r.status === "partial").length;
+  const osmTotal = osmReqs.length;
+
+  const statusIcon = (s) => s === "met" ? "✓" : s === "exceeds" ? "★" : "◐";
+  const statusColor = (s) => s === "met" ? T.green : s === "exceeds" ? T.amber : T.cyan;
+
   return (
     <Slide>
-      <SectionLabel>Already Operating at the Next Level</SectionLabel>
+      <SectionLabel>Role Policy Alignment</SectionLabel>
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
         style={{ fontFamily: T.font, fontSize: 20, fontWeight: 600, color: T.white, marginTop: 8, marginBottom: 4 }}>
-        Current Sr. OSA Role — <span style={{ color: T.amber }}>Fully Meeting OSM Requirements.</span>
+        Sr. OSA: <span style={{ color: T.green }}>100% Met.</span> OSM: <span style={{ color: T.amber }}>Most Requirements Met.</span>
       </motion.p>
       <AmberLine delay={0.4} />
-      <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 24 }}>
-        <div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-            <span style={{ fontFamily: T.mono, fontSize: 11, color: T.amber, textTransform: "uppercase", letterSpacing: "0.12em" }}>Sr. OSA Role — Requirements Met</span>
-            <motion.button
-              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-              onClick={(e) => { e.stopPropagation(); setExampleModal(true); setExamplePinOk(false); setExamplePin(""); }}
-              style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 6, padding: "3px 10px", cursor: "pointer", fontFamily: T.mono, fontSize: 9, color: T.muted, letterSpacing: "0.08em" }}>
-              EDIT EXAMPLES
-            </motion.button>
-          </motion.div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {roleRequirements.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 + i * 0.28 }}
-                onClick={() => setActiveReq(activeReq === i ? null : i)}
-                style={{ cursor: "pointer", padding: "10px 14px", background: T.amberDim, border: `1px solid ${activeReq === i ? T.amber : T.amber + "33"}`, borderRadius: 6, transition: "all 0.2s" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: T.amber + "22", border: `2px solid ${T.amber}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                    <span style={{ fontSize: 10, color: T.amber }}>✓</span>
-                  </div>
-                  <span style={{ fontFamily: T.font, fontSize: 13, color: T.white, flex: 1 }}>{item.req}</span>
-                  <span style={{ fontSize: 10, color: T.muted, transform: activeReq === i ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▼</span>
-                </div>
-                <AnimatePresence>
-                  {activeReq === i && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
-                      <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${T.amber}22`, fontFamily: T.font, fontSize: 12, color: T.muted, lineHeight: 1.5 }}>
-                        {examples[item.req] || item.how}
+
+      {/* Role toggle + stats bar */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <div style={{ display: "flex", gap: 0, borderRadius: 6, overflow: "hidden", border: `1px solid ${T.border}` }}>
+          {[{ id: "srosa", label: "SR. OSA (2346)" }, { id: "osm", label: "OSM (2159)" }].map((v) => (
+            <button key={v.id} onClick={() => { setActiveView(v.id); setExpandedReq(null); }}
+              style={{
+                padding: "8px 20px", fontFamily: T.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+                background: activeView === v.id ? (v.id === "srosa" ? T.greenDim : T.amberDim) : T.card,
+                color: activeView === v.id ? (v.id === "srosa" ? T.green : T.amber) : T.muted,
+                border: "none", cursor: "pointer", transition: "all 0.2s",
+              }}>
+              {v.label}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          {/* Score badges */}
+          {activeView === "srosa" ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontFamily: T.mono, fontSize: 22, fontWeight: 700, color: T.green }}>{srOsaMet}/{srOsaTotal}</span>
+              <span style={{ fontFamily: T.mono, fontSize: 10, color: T.green, letterSpacing: "0.06em" }}>MET</span>
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontFamily: T.mono, fontSize: 20, fontWeight: 700, color: T.green }}>{osmMet}</span>
+                <span style={{ fontFamily: T.mono, fontSize: 9, color: T.green }}>MET</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontFamily: T.mono, fontSize: 20, fontWeight: 700, color: T.cyan }}>{osmPartial}</span>
+                <span style={{ fontFamily: T.mono, fontSize: 9, color: T.cyan }}>GROWING</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <span style={{ fontFamily: T.mono, fontSize: 14, fontWeight: 700, color: T.muted }}>{osmTotal}</span>
+                <span style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}>TOTAL</span>
+              </div>
+            </div>
+          )}
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+            onClick={(e) => { e.stopPropagation(); setExampleModal(true); setExamplePinOk(false); setExamplePin(""); }}
+            style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontFamily: T.mono, fontSize: 9, color: T.muted, letterSpacing: "0.08em" }}>
+            EDIT
+          </motion.button>
+        </div>
+      </motion.div>
+
+      {/* Progress bar */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+        style={{ height: 4, background: T.card, borderRadius: 2, marginBottom: 16, overflow: "hidden" }}>
+        <motion.div initial={{ width: 0 }} animate={{ width: activeView === "srosa" ? "100%" : `${((osmMet + osmPartial * 0.5) / osmTotal) * 100}%` }}
+          transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
+          style={{ height: "100%", borderRadius: 2, background: `linear-gradient(90deg, ${activeView === "srosa" ? T.green : T.amber}, ${activeView === "srosa" ? T.green : T.cyan})` }} />
+      </motion.div>
+
+      {/* Requirements by category */}
+      <div style={{ overflowY: "auto", maxHeight: "calc(100vh - 340px)", scrollbarWidth: "thin", scrollbarColor: `${T.border} transparent`, paddingRight: 4 }}>
+        {categories.map((cat, ci) => (
+          <motion.div key={cat} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 + ci * 0.1 }}
+            style={{ marginBottom: 12 }}>
+            <div style={{ fontFamily: T.mono, fontSize: 9, fontWeight: 700, color: T.muted, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 6, paddingLeft: 2 }}>
+              {cat === "WMS" ? "Warehouse Management System" : cat === "Analytics" ? "Business Analytics" : cat === "Warehouse" ? "Warehouse Activities" : cat === "Tech Support" ? "Technical Support" : cat === "Interpersonal" ? "Interpersonal & Leadership" : cat === "Scope" ? "Scope & Decision-Making" : cat}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {activeReqs.filter((r) => r.category === cat).map((item, i) => {
+                const globalIdx = activeReqs.indexOf(item);
+                const isExpanded = expandedReq === globalIdx;
+                const sc = statusColor(item.status);
+                return (
+                  <motion.div key={i}
+                    onClick={() => setExpandedReq(isExpanded ? null : globalIdx)}
+                    whileHover={{ borderColor: sc + "66" }}
+                    style={{ cursor: "pointer", padding: "7px 12px", background: `${sc}08`, border: `1px solid ${sc}22`, borderRadius: 6, transition: "all 0.2s" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ width: 18, height: 18, borderRadius: "50%", background: `${sc}18`, border: `2px solid ${sc}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <span style={{ fontSize: 9, color: sc, fontWeight: 700 }}>{statusIcon(item.status)}</span>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-            style={{ fontFamily: T.mono, fontSize: 11, color: T.gray, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 14 }}>Where I'm Still Growing</motion.div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {growth.map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.5 + i * 0.4 }}
-                style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 14px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 6 }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", border: `2px solid ${T.gray}`, flexShrink: 0, marginTop: 4 }} />
-                <span style={{ fontFamily: T.font, fontSize: 13, color: T.gray }}>{item}</span>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+                      <span style={{ fontFamily: T.font, fontSize: 12, color: T.white, flex: 1 }}>{item.req}</span>
+                      <span style={{ fontFamily: T.mono, fontSize: 8, color: sc, textTransform: "uppercase", letterSpacing: "0.08em", flexShrink: 0 }}>
+                        {item.status === "exceeds" ? "EXCEEDS" : item.status === "met" ? "MET" : "GROWING"}
+                      </span>
+                      <span style={{ fontSize: 8, color: T.muted, transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s", flexShrink: 0 }}>▼</span>
+                    </div>
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
+                          <div style={{ marginTop: 6, paddingTop: 6, borderTop: `1px solid ${sc}15`, fontFamily: T.font, fontSize: 11, color: T.muted, lineHeight: 1.5 }}>
+                            {examples[`${activeView}-${item.req}`] || item.how}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </motion.div>
+        ))}
       </div>
+
+      {/* Legend */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+        style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 12, paddingTop: 10, borderTop: `1px solid ${T.border}` }}>
+        {[{ icon: "✓", color: T.green, label: "Requirement Met" }, { icon: "★", color: T.amber, label: "Exceeds Requirement" }, { icon: "◐", color: T.cyan, label: "Actively Growing" }].map((l, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 14, height: 14, borderRadius: "50%", background: `${l.color}18`, border: `2px solid ${l.color}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: 7, color: l.color, fontWeight: 700 }}>{l.icon}</span>
+            </div>
+            <span style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}>{l.label}</span>
+          </div>
+        ))}
+      </motion.div>
 
       {/* Example editor modal behind PIN */}
       <AnimatePresence>
@@ -503,7 +609,7 @@ function PR5() {
             <motion.div
               initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }}
               onClick={(e) => e.stopPropagation()}
-              style={{ width: "90%", maxWidth: 560, maxHeight: "80vh", background: T.bg, border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: `0 0 60px rgba(0,0,0,0.5), 0 0 30px ${T.amberGlow}` }}>
+              style={{ width: "90%", maxWidth: 620, maxHeight: "85vh", background: T.bg, border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: `0 0 60px rgba(0,0,0,0.5), 0 0 30px ${T.amberGlow}` }}>
               {/* Header */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${T.border}`, background: T.card, flexShrink: 0 }}>
                 <span style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: T.amber }}>Edit Role Examples</span>
@@ -527,15 +633,21 @@ function PR5() {
                     </button>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                    {roleRequirements.map((item, i) => (
-                      <div key={i} style={{ padding: "12px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 8 }}>
-                        <div style={{ fontFamily: T.font, fontSize: 12, fontWeight: 600, color: T.white, marginBottom: 8 }}>{item.req}</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    <div style={{ fontFamily: T.mono, fontSize: 10, color: T.amber, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>
+                      Editing: {activeView === "srosa" ? "Sr. OSA" : "OSM"} Examples
+                    </div>
+                    {activeReqs.map((item, i) => (
+                      <div key={i} style={{ padding: "10px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 8 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+                          <span style={{ fontSize: 8, color: statusColor(item.status) }}>{statusIcon(item.status)}</span>
+                          <span style={{ fontFamily: T.font, fontSize: 11, fontWeight: 600, color: T.white }}>{item.req}</span>
+                        </div>
                         <textarea
-                          defaultValue={examples[item.req] || item.how}
-                          onBlur={(e) => saveExample(item.req, e.target.value)}
+                          defaultValue={examples[`${activeView}-${item.req}`] || item.how}
+                          onBlur={(e) => saveExample(`${activeView}-${item.req}`, e.target.value)}
                           rows={2}
-                          style={{ width: "100%", fontFamily: T.font, fontSize: 12, color: T.white, background: T.bg, border: `1px solid ${T.border}`, borderRadius: 6, padding: "8px", resize: "vertical", outline: "none", lineHeight: 1.5 }}
+                          style={{ width: "100%", fontFamily: T.font, fontSize: 11, color: T.white, background: T.bg, border: `1px solid ${T.border}`, borderRadius: 6, padding: "8px", resize: "vertical", outline: "none", lineHeight: 1.4 }}
                         />
                       </div>
                     ))}
