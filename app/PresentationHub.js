@@ -343,7 +343,7 @@ function PR2() {
 
 function PR3() {
   const items = [
-    { icon: "📋", label: "LSW Program" }, { icon: "📊", label: "EOS Reporting" },
+    { icon: "📋", label: "LSW Adherence" }, { icon: "📊", label: "EOS Reporting" },
     { icon: "📓", label: "Team OneNote" }, { icon: "🔗", label: "SharePoint Tracker" },
     { icon: "📁", label: "K: Drive Restructure" }, { icon: "📝", label: "Onboarding SOPs" },
     { icon: "🖥️", label: "Server Room Cleanup" }, { icon: "📍", label: "GPS Routing Fix" },
@@ -405,26 +405,75 @@ function PR4() {
 }
 
 function PR5() {
-  const osmFunctions = ["Set team operational rhythm (LSW/EOS)", "Developing & mentoring 2 analysts", "Built SOP & training infrastructure", "CI project leadership with Engineering", "Resource coordination & daily team support", "Cross-functional stakeholder management"];
+  const [activeReq, setActiveReq] = useState(null);
+  const [exampleModal, setExampleModal] = useState(false);
+  const [examplePin, setExamplePin] = useState("");
+  const [examplePinOk, setExamplePinOk] = useState(false);
+  const [examples, setExamples] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("pr5_examples");
+      if (saved) return JSON.parse(saved);
+    }
+    return {};
+  });
+  const [draftExample, setDraftExample] = useState("");
+
+  const saveExample = (key, text) => {
+    const updated = { ...examples, [key]: text };
+    setExamples(updated);
+    if (typeof window !== "undefined") localStorage.setItem("pr5_examples", JSON.stringify(updated));
+  };
+
+  const roleRequirements = [
+    { req: "Set team operational rhythm (LSW/EOS)", met: true, how: "Currently own and drive LSW adherence and EOS reporting cadence for entire team" },
+    { req: "Developing & mentoring analysts", met: true, how: "Actively developing & mentoring 2 analysts with structured SOPs and regular 1:1 coaching" },
+    { req: "Built SOP & training infrastructure", met: true, how: "Created onboarding SOPs, Team OneNote, SharePoint tracker — full training infrastructure from scratch" },
+    { req: "CI project leadership with Engineering", met: true, how: "Leading CI projects end-to-end with engineering coordination, from scoping through deployment" },
+    { req: "Resource coordination & daily team support", met: true, how: "Daily triage, resource allocation, and hands-on support for team operations" },
+    { req: "Cross-functional stakeholder management", met: true, how: "Regular cross-functional coordination with Engineering, Ops leadership, and client-facing teams" },
+  ];
   const growth = ["WMS subsystem depth — need dedicated floor time & mentorship", "Formal project management discipline", "Sustained delivery consistency under competing priorities"];
   return (
     <Slide>
       <SectionLabel>Already Operating at the Next Level</SectionLabel>
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
         style={{ fontFamily: T.font, fontSize: 20, fontWeight: 600, color: T.white, marginTop: 8, marginBottom: 4 }}>
-        Sr. OSA Title. <span style={{ color: T.amber }}>OSM-Level Work.</span>
+        Current Sr. OSA Role — <span style={{ color: T.amber }}>Fully Meeting OSM Requirements.</span>
       </motion.p>
       <AmberLine delay={0.4} />
       <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 24 }}>
         <div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-            style={{ fontFamily: T.mono, fontSize: 11, color: T.amber, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 14 }}>What I'm Doing (OSM Functions)</motion.div>
+            style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+            <span style={{ fontFamily: T.mono, fontSize: 11, color: T.amber, textTransform: "uppercase", letterSpacing: "0.12em" }}>Sr. OSA Role — Requirements Met</span>
+            <motion.button
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              onClick={(e) => { e.stopPropagation(); setExampleModal(true); setExamplePinOk(false); setExamplePin(""); }}
+              style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 6, padding: "3px 10px", cursor: "pointer", fontFamily: T.mono, fontSize: 9, color: T.muted, letterSpacing: "0.08em" }}>
+              EDIT EXAMPLES
+            </motion.button>
+          </motion.div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {osmFunctions.map((item, i) => (
+            {roleRequirements.map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 + i * 0.28 }}
-                style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: T.amberDim, border: `1px solid ${T.amber}33`, borderRadius: 6 }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.amber, flexShrink: 0 }} />
-                <span style={{ fontFamily: T.font, fontSize: 13, color: T.white }}>{item}</span>
+                onClick={() => setActiveReq(activeReq === i ? null : i)}
+                style={{ cursor: "pointer", padding: "10px 14px", background: T.amberDim, border: `1px solid ${activeReq === i ? T.amber : T.amber + "33"}`, borderRadius: 6, transition: "all 0.2s" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 18, height: 18, borderRadius: "50%", background: T.amber + "22", border: `2px solid ${T.amber}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span style={{ fontSize: 10, color: T.amber }}>✓</span>
+                  </div>
+                  <span style={{ fontFamily: T.font, fontSize: 13, color: T.white, flex: 1 }}>{item.req}</span>
+                  <span style={{ fontSize: 10, color: T.muted, transform: activeReq === i ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}>▼</span>
+                </div>
+                <AnimatePresence>
+                  {activeReq === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}>
+                      <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${T.amber}22`, fontFamily: T.font, fontSize: 12, color: T.muted, lineHeight: 1.5 }}>
+                        {examples[item.req] || item.how}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </div>
@@ -443,6 +492,61 @@ function PR5() {
           </div>
         </div>
       </div>
+
+      {/* Example editor modal behind PIN */}
+      <AnimatePresence>
+        {exampleModal && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setExampleModal(false)}
+            style={{ position: "fixed", inset: 0, zIndex: 600, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ width: "90%", maxWidth: 560, maxHeight: "80vh", background: T.bg, border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: `0 0 60px rgba(0,0,0,0.5), 0 0 30px ${T.amberGlow}` }}>
+              {/* Header */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${T.border}`, background: T.card, flexShrink: 0 }}>
+                <span style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: T.amber }}>Edit Role Examples</span>
+                <button onClick={() => setExampleModal(false)} style={{ background: "transparent", border: `1px solid ${T.border}`, borderRadius: 8, padding: "6px 10px", cursor: "pointer", color: T.muted, fontFamily: T.mono, fontSize: 14, lineHeight: 1 }}>✕</button>
+              </div>
+              {/* Body */}
+              <div style={{ padding: "24px", overflowY: "auto", flex: 1, scrollbarWidth: "thin", scrollbarColor: `${T.border} transparent` }}>
+                {!examplePinOk ? (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "20px 0" }}>
+                    <span style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>Enter PIN to edit</span>
+                    <input
+                      type="password" value={examplePin} maxLength={5}
+                      onChange={(e) => setExamplePin(e.target.value.replace(/\D/g, ""))}
+                      onKeyDown={(e) => { if (e.key === "Enter") { if (examplePin === "11601") setExamplePinOk(true); else setExamplePin(""); } }}
+                      style={{ width: 160, textAlign: "center", fontFamily: T.mono, fontSize: 24, letterSpacing: "0.3em", background: T.card, border: `1px solid ${T.border}`, borderRadius: 8, padding: "10px", color: T.white, outline: "none" }}
+                    />
+                    <button
+                      onClick={() => { if (examplePin === "11601") setExamplePinOk(true); else setExamplePin(""); }}
+                      style={{ background: T.amberDim, border: `1px solid ${T.amber}44`, borderRadius: 6, padding: "8px 24px", cursor: "pointer", fontFamily: T.mono, fontSize: 11, color: T.amber, fontWeight: 600, letterSpacing: "0.08em" }}>
+                      UNLOCK
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                    {roleRequirements.map((item, i) => (
+                      <div key={i} style={{ padding: "12px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 8 }}>
+                        <div style={{ fontFamily: T.font, fontSize: 12, fontWeight: 600, color: T.white, marginBottom: 8 }}>{item.req}</div>
+                        <textarea
+                          defaultValue={examples[item.req] || item.how}
+                          onBlur={(e) => saveExample(item.req, e.target.value)}
+                          rows={2}
+                          style={{ width: "100%", fontFamily: T.font, fontSize: 12, color: T.white, background: T.bg, border: `1px solid ${T.border}`, borderRadius: 6, padding: "8px", resize: "vertical", outline: "none", lineHeight: 1.5 }}
+                        />
+                      </div>
+                    ))}
+                    <div style={{ textAlign: "center", fontFamily: T.mono, fontSize: 10, color: T.muted }}>Changes save automatically on blur</div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Slide>
   );
 }
@@ -522,7 +626,124 @@ function PR7() {
 }
 
 function PR8() {
-  const goals = ["Zero-Miss Delivery System", "Proactive Communication", "WMS SME Development", "Ops & Engineering Collaboration", "Professional Conduct", "Right First Time Review Process"];
+  const [activeGoal, setActiveGoal] = useState(null);
+  const goals = [
+    {
+      title: "Zero-Miss Delivery System",
+      project: "Audit Tool",
+      icon: "🎯",
+      color: T.amber,
+      smart: {
+        specific: "Build and deploy an automated audit tool that tracks every deliverable from assignment through completion, ensuring zero missed deadlines.",
+        measurable: "100% of assigned deliverables tracked in tool; 0 missed deliveries over 90-day period.",
+        achievable: "Leverage existing SharePoint/database infrastructure and current development skills to build MVP within first 30 days.",
+        relevant: "Directly addresses delivery consistency feedback and creates a reusable system for the team.",
+        timeBound: "MVP live by Day 30. Full feature set by Day 60. 30-day validation period through Day 90.",
+      },
+      milestones: [
+        { day: "Day 1–10", task: "Requirements gathering & tool architecture" },
+        { day: "Day 11–30", task: "MVP build — core tracking & alerting" },
+        { day: "Day 31–60", task: "Dashboard, reporting, and team rollout" },
+        { day: "Day 61–90", task: "Validation period — zero-miss target" },
+      ],
+    },
+    {
+      title: "Proactive Communication",
+      project: "Communication Framework",
+      icon: "📡",
+      color: T.green,
+      smart: {
+        specific: "Establish a structured communication cadence: daily status updates, weekly summaries, and proactive escalation of blockers before they impact timelines.",
+        measurable: "Daily EOD status sent to manager; weekly summary every Friday; blockers escalated within 2 hours of identification.",
+        achievable: "Requires discipline and a simple tracking template — no additional tooling needed.",
+        relevant: "Addresses feedback on communication gaps and ensures leadership always has visibility into progress.",
+        timeBound: "Cadence established Day 1. Consistency validated over full 90-day period.",
+      },
+      milestones: [
+        { day: "Day 1–7", task: "Set up communication templates & cadence" },
+        { day: "Day 8–30", task: "Daily execution — build the habit" },
+        { day: "Day 31–60", task: "Refine format based on manager feedback" },
+        { day: "Day 61–90", task: "Sustained consistency — zero missed updates" },
+      ],
+    },
+    {
+      title: "WMS SME Development",
+      project: "Systems Learning Hub",
+      icon: "🧠",
+      color: T.cyan,
+      smart: {
+        specific: "Build a systems learning hub documenting WMS subsystems, configurations, and troubleshooting guides while developing personal SME-level knowledge.",
+        measurable: "Complete documentation of 3 core WMS subsystems; pass internal knowledge assessment; learning hub live for team use.",
+        achievable: "Dedicated floor time with mentorship from WMS leads. Learning hub built using existing knowledge base tools.",
+        relevant: "Addresses the primary technical growth area and creates lasting value for the team.",
+        timeBound: "First subsystem documented by Day 30. Second by Day 50. Third by Day 70. Hub published Day 80. Validation Day 81–90.",
+      },
+      milestones: [
+        { day: "Day 1–15", task: "Shadow WMS leads, identify 3 priority subsystems" },
+        { day: "Day 16–30", task: "Deep dive subsystem #1 — document & test" },
+        { day: "Day 31–50", task: "Subsystem #2 — document & build hub structure" },
+        { day: "Day 51–70", task: "Subsystem #3 — complete documentation" },
+        { day: "Day 71–90", task: "Publish hub, peer review, knowledge validation" },
+      ],
+    },
+    {
+      title: "Ops & Engineering Collaboration",
+      project: "Route Checker Tool",
+      icon: "🔧",
+      color: T.blue,
+      smart: {
+        specific: "Design and deliver a route checker tool in collaboration with Engineering, demonstrating structured cross-functional project execution.",
+        measurable: "Tool deployed and validated by operations team; documented handoff to Engineering for maintenance; positive stakeholder feedback.",
+        achievable: "Builds on existing GPS routing fix experience and current engineering relationships.",
+        relevant: "Demonstrates CI project leadership capability and creates measurable operational value.",
+        timeBound: "Requirements finalized by Day 15. Development complete by Day 45. UAT and deployment by Day 60. Feedback collection through Day 90.",
+      },
+      milestones: [
+        { day: "Day 1–15", task: "Scope requirements with Ops & Engineering" },
+        { day: "Day 16–45", task: "Build route checker tool — iterative development" },
+        { day: "Day 46–60", task: "UAT, bug fixes, and deployment" },
+        { day: "Day 61–90", task: "Monitor usage, collect feedback, iterate" },
+      ],
+    },
+    {
+      title: "Professional Conduct",
+      project: "Conduct Standards",
+      icon: "🤝",
+      color: "#A78BFA",
+      smart: {
+        specific: "Maintain consistent professional conduct in all interactions — meetings, Slack, email, and cross-functional collaboration — with zero incidents.",
+        measurable: "Zero conduct-related feedback items; positive peer feedback in 60-day check-in; consistent adherence to team communication norms.",
+        achievable: "Self-awareness and intentional communication practices. Weekly self-reflection check-ins.",
+        relevant: "Professional conduct is foundational to leadership credibility and team trust.",
+        timeBound: "Immediate implementation. 30-day check-in with manager. 60-day peer feedback. 90-day final review.",
+      },
+      milestones: [
+        { day: "Day 1", task: "Commit to conduct standards — document personal guidelines" },
+        { day: "Day 30", task: "Manager check-in — review conduct feedback" },
+        { day: "Day 60", task: "Peer feedback collection" },
+        { day: "Day 90", task: "Final review — sustained zero-incident record" },
+      ],
+    },
+    {
+      title: "Right First Time Review Process",
+      project: "Quality Gate Process",
+      icon: "✅",
+      color: "#F472B6",
+      smart: {
+        specific: "Implement a personal review checklist and peer review process for all deliverables before submission, ensuring right-first-time quality.",
+        measurable: "All deliverables pass through review checklist; peer review for critical items; rework rate below 5%.",
+        achievable: "Create checklist template and establish peer review partnership with team member.",
+        relevant: "Directly addresses quality consistency and builds sustainable review habits for the team.",
+        timeBound: "Checklist created by Day 7. Peer review process by Day 14. Full adoption by Day 30. Rework rate tracked through Day 90.",
+      },
+      milestones: [
+        { day: "Day 1–7", task: "Draft review checklist based on common error patterns" },
+        { day: "Day 8–14", task: "Establish peer review partnership" },
+        { day: "Day 15–30", task: "Full process adoption — all deliverables through checklist" },
+        { day: "Day 31–90", task: "Track rework rate, refine checklist, validate < 5%" },
+      ],
+    },
+  ];
   return (
     <Slide>
       <SectionLabel>The Ask</SectionLabel>
@@ -534,9 +755,16 @@ function PR8() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 28 }}>
         {goals.map((goal, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.5 + i * 0.28 }}
-            style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 6 }}>
-            <span style={{ fontFamily: T.mono, fontSize: 18, fontWeight: 700, color: T.amber, width: 28, textAlign: "center" }}>{i + 1}</span>
-            <span style={{ fontFamily: T.font, fontSize: 14, color: T.white, fontWeight: 500 }}>{goal}</span>
+            onClick={() => setActiveGoal(i)}
+            whileHover={{ scale: 1.02, borderColor: goal.color + "88" }}
+            whileTap={{ scale: 0.98 }}
+            style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 6, cursor: "pointer", transition: "border-color 0.2s" }}>
+            <span style={{ fontFamily: T.mono, fontSize: 18, fontWeight: 700, color: goal.color, width: 28, textAlign: "center" }}>{i + 1}</span>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontFamily: T.font, fontSize: 14, color: T.white, fontWeight: 500 }}>{goal.title}</span>
+              <div style={{ fontFamily: T.mono, fontSize: 9, color: T.muted, marginTop: 2, letterSpacing: "0.06em" }}>{goal.project} — click for details</div>
+            </div>
+            <span style={{ fontSize: 16 }}>{goal.icon}</span>
           </motion.div>
         ))}
       </div>
@@ -544,6 +772,70 @@ function PR8() {
         style={{ padding: "16px 32px", background: T.amberDim, border: `2px solid ${T.amber}55`, borderRadius: 10, textAlign: "center" }}>
         <span style={{ fontFamily: T.font, fontSize: 20, fontWeight: 700, color: T.amber }}>90 Days. 6 SMART Goals. Full Transparency.</span>
       </motion.div>
+
+      {/* SMART Goal Detail Modal */}
+      <AnimatePresence>
+        {activeGoal !== null && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setActiveGoal(null)}
+            style={{ position: "fixed", inset: 0, zIndex: 600, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ width: "90%", maxWidth: 700, maxHeight: "85vh", background: T.bg, border: `1px solid ${goals[activeGoal].color}44`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: `0 0 60px rgba(0,0,0,0.5), 0 0 30px ${goals[activeGoal].color}22` }}>
+              {/* Modal Header */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${T.border}`, background: T.card, flexShrink: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: 22 }}>{goals[activeGoal].icon}</span>
+                  <div>
+                    <div style={{ fontFamily: T.font, fontSize: 16, fontWeight: 700, color: T.white }}>{goals[activeGoal].title}</div>
+                    <div style={{ fontFamily: T.mono, fontSize: 10, color: goals[activeGoal].color, letterSpacing: "0.08em", marginTop: 2 }}>PROJECT: {goals[activeGoal].project.toUpperCase()}</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {/* Nav arrows */}
+                  <button onClick={() => setActiveGoal(Math.max(0, activeGoal - 1))} disabled={activeGoal === 0}
+                    style={{ background: "transparent", border: `1px solid ${T.border}`, borderRadius: 6, padding: "4px 10px", cursor: activeGoal === 0 ? "default" : "pointer", color: activeGoal === 0 ? T.border : T.muted, fontFamily: T.mono, fontSize: 14, opacity: activeGoal === 0 ? 0.4 : 1 }}>‹</button>
+                  <span style={{ fontFamily: T.mono, fontSize: 10, color: T.muted }}>{activeGoal + 1}/6</span>
+                  <button onClick={() => setActiveGoal(Math.min(5, activeGoal + 1))} disabled={activeGoal === 5}
+                    style={{ background: "transparent", border: `1px solid ${T.border}`, borderRadius: 6, padding: "4px 10px", cursor: activeGoal === 5 ? "default" : "pointer", color: activeGoal === 5 ? T.border : T.muted, fontFamily: T.mono, fontSize: 14, opacity: activeGoal === 5 ? 0.4 : 1 }}>›</button>
+                  <button onClick={() => setActiveGoal(null)}
+                    style={{ background: "transparent", border: `1px solid ${T.border}`, borderRadius: 8, padding: "6px 10px", cursor: "pointer", color: T.muted, fontFamily: T.mono, fontSize: 14, lineHeight: 1 }}>✕</button>
+                </div>
+              </div>
+              {/* Modal Body */}
+              <div style={{ padding: "24px", overflowY: "auto", flex: 1, scrollbarWidth: "thin", scrollbarColor: `${T.border} transparent` }}>
+                {/* SMART Breakdown */}
+                <div style={{ fontFamily: T.mono, fontSize: 10, color: goals[activeGoal].color, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 12 }}>SMART Goal Breakdown</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 24 }}>
+                  {Object.entries(goals[activeGoal].smart).map(([key, val]) => (
+                    <div key={key} style={{ display: "flex", gap: 12, padding: "10px 14px", background: T.card, border: `1px solid ${T.border}`, borderRadius: 8 }}>
+                      <div style={{ fontFamily: T.mono, fontSize: 10, fontWeight: 700, color: goals[activeGoal].color, textTransform: "uppercase", letterSpacing: "0.08em", width: 80, flexShrink: 0, paddingTop: 2 }}>
+                        {key === "timeBound" ? "Time-Bound" : key.charAt(0).toUpperCase() + key.slice(1)}
+                      </div>
+                      <div style={{ fontFamily: T.font, fontSize: 13, color: T.white, lineHeight: 1.5 }}>{val}</div>
+                    </div>
+                  ))}
+                </div>
+                {/* Timeline / Milestones */}
+                <div style={{ fontFamily: T.mono, fontSize: 10, color: goals[activeGoal].color, textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 12 }}>Timeline & Milestones</div>
+                <div style={{ position: "relative", paddingLeft: 20 }}>
+                  <div style={{ position: "absolute", left: 7, top: 4, bottom: 4, width: 2, background: goals[activeGoal].color + "33" }} />
+                  {goals[activeGoal].milestones.map((m, j) => (
+                    <div key={j} style={{ display: "flex", gap: 16, marginBottom: j < goals[activeGoal].milestones.length - 1 ? 14 : 0, position: "relative" }}>
+                      <div style={{ position: "absolute", left: -16, top: 6, width: 10, height: 10, borderRadius: "50%", background: goals[activeGoal].color, border: `2px solid ${T.bg}`, zIndex: 1 }} />
+                      <div style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 700, color: goals[activeGoal].color, width: 70, flexShrink: 0, paddingTop: 2 }}>{m.day}</div>
+                      <div style={{ fontFamily: T.font, fontSize: 13, color: T.white, lineHeight: 1.4 }}>{m.task}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Slide>
   );
 }
@@ -580,27 +872,88 @@ const PR_SCENES = [PR1, PR2, PR3, PR4, PR5, PR6, PR7, PR8, PR9];
 // ═══════════════════════════════════════════════════════════════
 
 function FD1() {
+  const words = [
+    { text: "Forward-Deployed", color: T.white },
+    { text: "Operations", color: T.white },
+    { text: "Systems", color: T.white },
+    { text: "Engineering", color: T.amber },
+  ];
   return (
     <Slide>
       <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%" }}>
-        <motion.div initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}
-          style={{ display: "inline-flex", gap: 3, marginBottom: 20 }}>
+        {/* Monospace acronym — clean fade, no bounce */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          style={{ display: "flex", gap: 6, marginBottom: 24 }}
+        >
           {["F", "D", "O", "S", "E"].map((c, i) => (
-            <motion.span key={i} initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 + i * 0.12, type: "spring", stiffness: 200 }}
-              style={{ fontFamily: T.mono, fontSize: 52, fontWeight: 700, color: T.amber, textShadow: `0 0 30px ${T.amberGlow}`, letterSpacing: "0.04em" }}>{c}</motion.span>
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + i * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{
+                fontFamily: T.mono, fontSize: 14, fontWeight: 700, letterSpacing: "0.2em",
+                color: T.amber, textTransform: "uppercase",
+                background: T.amberDim, border: `1px solid ${T.amber}33`,
+                borderRadius: 6, padding: "6px 10px", minWidth: 32, textAlign: "center",
+              }}
+            >
+              {c}
+            </motion.span>
           ))}
         </motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.7 }}
-          style={{ fontFamily: T.font, fontSize: 36, fontWeight: 700, color: T.white, marginBottom: 8 }}>
-          Forward-Deployed<br />Operations Systems Engineering
-        </motion.h1>
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.3, duration: 0.8 }}
-          style={{ height: 3, width: 300, background: T.amber, margin: "16px auto", transformOrigin: "center", boxShadow: `0 0 20px ${T.amberGlow}` }} />
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
-          style={{ fontFamily: T.font, fontSize: 16, color: T.muted, marginBottom: 8 }}>Embedding Technical Operators Where It Matters Most</motion.p>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.9 }}
-          style={{ fontFamily: T.mono, fontSize: 12, color: T.gray }}>DHL Supply Chain &nbsp;|&nbsp; Internal Strategy Proposal</motion.p>
+
+        {/* Title — word-by-word reveal */}
+        <div style={{ marginBottom: 8, overflow: "hidden" }}>
+          {words.map((w, i) => (
+            <motion.span
+              key={i}
+              initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ delay: 0.6 + i * 0.14, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{
+                fontFamily: T.font, fontSize: 38, fontWeight: 700, color: w.color,
+                display: "inline-block", marginRight: 12,
+              }}
+            >
+              {w.text}
+            </motion.span>
+          ))}
+        </div>
+
+        {/* Amber line */}
+        <motion.div
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 300, opacity: 1 }}
+          transition={{ delay: 1.3, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{
+            height: 2, background: `linear-gradient(90deg, transparent, ${T.amber}, transparent)`,
+            margin: "16px auto",
+          }}
+        />
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.6, duration: 0.6 }}
+          style={{ fontFamily: T.font, fontSize: 16, color: T.muted, marginBottom: 8 }}
+        >
+          Embedding Technical Operators Where It Matters Most
+        </motion.p>
+
+        {/* Attribution */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ delay: 2.0, duration: 0.8 }}
+          style={{ fontFamily: T.mono, fontSize: 11, color: T.gray }}
+        >
+          DHL Supply Chain &nbsp;|&nbsp; Internal Strategy Proposal
+        </motion.p>
       </div>
     </Slide>
   );
@@ -1756,6 +2109,155 @@ function PinGate({ onUnlock }) {
   );
 }
 
+// ═══════════════════════════════════════════
+// SLIDE EDITOR — General-purpose content editor behind PIN
+// ═══════════════════════════════════════════
+
+const SLIDE_LABELS = {
+  rebuttal: ["Opening", "Background", "14 Months of Ownership", "Deliverables", "Sr. OSA Role Alignment", "Wearing Multiple Hats", "Process Validation Gaps", "SMART Goals Sprint", "Closing"],
+  fdose: ["FDOSE Title", "The Problem", "FDOSE Model", "Role Comparison", "Why This Model Wins", "What It Looks Like", "Org Chart", "Where to Insert", "The Pitch", "Case Study", "Implementation", "Closing"],
+  intent: Array.from({ length: 18 }, (_, i) => `Intent Slide ${i + 1}`),
+};
+
+function SlideEditor({ deck, slideIndex, open, onClose }) {
+  const [pinOk, setPinOk] = useState(false);
+  const [pin, setPin] = useState("");
+  const [notes, setNotes] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("slide_editor_notes");
+      if (saved) return JSON.parse(saved);
+    }
+    return {};
+  });
+  const [activeField, setActiveField] = useState("notes");
+
+  const key = `${deck}-${slideIndex}`;
+  const current = notes[key] || { notes: "", talking_points: "", todos: "" };
+
+  const updateField = (field, value) => {
+    const updated = { ...notes, [key]: { ...current, [field]: value } };
+    setNotes(updated);
+    if (typeof window !== "undefined") localStorage.setItem("slide_editor_notes", JSON.stringify(updated));
+  };
+
+  // Reset PIN state when modal opens
+  useEffect(() => {
+    if (!open) { setPinOk(false); setPin(""); }
+  }, [open]);
+
+  if (!open) return null;
+
+  const fields = [
+    { id: "notes", label: "NOTES", placeholder: "General notes about this slide..." },
+    { id: "talking_points", label: "TALKING POINTS", placeholder: "Key points to communicate..." },
+    { id: "todos", label: "TO-DO", placeholder: "Changes or updates needed..." },
+  ];
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          onClick={onClose}
+          style={{ position: "fixed", inset: 0, zIndex: 700, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.97 }}
+            onClick={(e) => e.stopPropagation()}
+            style={{ width: "90%", maxWidth: 620, maxHeight: "85vh", background: T.bg, border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: `0 0 60px rgba(0,0,0,0.5), 0 0 30px ${T.amberGlow}` }}>
+            {/* Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${T.border}`, background: T.card, flexShrink: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ fontFamily: T.mono, fontSize: 11, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: T.amber }}>Slide Editor</span>
+                <span style={{ fontFamily: T.mono, fontSize: 10, color: T.gray, background: `${T.amber}18`, border: `1px solid ${T.amber}33`, borderRadius: 12, padding: "2px 10px" }}>
+                  {SLIDE_LABELS[deck]?.[slideIndex] || `Slide ${slideIndex + 1}`}
+                </span>
+              </div>
+              <button onClick={onClose} style={{ background: "transparent", border: `1px solid ${T.border}`, borderRadius: 8, padding: "6px 10px", cursor: "pointer", color: T.muted, fontFamily: T.mono, fontSize: 14, lineHeight: 1 }}>✕</button>
+            </div>
+            {/* Body */}
+            <div style={{ padding: "24px", overflowY: "auto", flex: 1, scrollbarWidth: "thin", scrollbarColor: `${T.border} transparent` }}>
+              {!pinOk ? (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "32px 0" }}>
+                  <span style={{ fontFamily: T.mono, fontSize: 11, color: T.muted, letterSpacing: "0.1em", textTransform: "uppercase" }}>Enter PIN to edit slides</span>
+                  <input
+                    type="password" value={pin} maxLength={5} autoFocus
+                    onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
+                    onKeyDown={(e) => { if (e.key === "Enter") { if (pin === "11601") setPinOk(true); else setPin(""); } }}
+                    style={{ width: 160, textAlign: "center", fontFamily: T.mono, fontSize: 24, letterSpacing: "0.3em", background: T.card, border: `1px solid ${T.border}`, borderRadius: 8, padding: "10px", color: T.white, outline: "none" }}
+                  />
+                  <button
+                    onClick={() => { if (pin === "11601") setPinOk(true); else setPin(""); }}
+                    style={{ background: T.amberDim, border: `1px solid ${T.amber}44`, borderRadius: 6, padding: "8px 24px", cursor: "pointer", fontFamily: T.mono, fontSize: 11, color: T.amber, fontWeight: 600, letterSpacing: "0.08em" }}>
+                    UNLOCK
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  {/* Field tabs */}
+                  <div style={{ display: "flex", gap: 0, marginBottom: 16, borderRadius: 6, overflow: "hidden", border: `1px solid ${T.border}` }}>
+                    {fields.map((f) => (
+                      <button key={f.id} onClick={() => setActiveField(f.id)}
+                        style={{
+                          flex: 1, padding: "8px 0", fontFamily: T.mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.08em",
+                          background: activeField === f.id ? T.amberDim : T.card,
+                          color: activeField === f.id ? T.amber : T.muted,
+                          border: "none", cursor: "pointer", transition: "all 0.2s",
+                          borderRight: `1px solid ${T.border}`,
+                        }}>
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Active field editor */}
+                  {fields.filter((f) => f.id === activeField).map((f) => (
+                    <textarea
+                      key={f.id}
+                      value={current[f.id] || ""}
+                      onChange={(e) => updateField(f.id, e.target.value)}
+                      placeholder={f.placeholder}
+                      rows={10}
+                      style={{
+                        width: "100%", fontFamily: T.font, fontSize: 13, color: T.white, background: T.card,
+                        border: `1px solid ${T.border}`, borderRadius: 8, padding: "14px", resize: "vertical",
+                        outline: "none", lineHeight: 1.6, minHeight: 200,
+                      }}
+                    />
+                  ))}
+                  <div style={{ marginTop: 12, textAlign: "center", fontFamily: T.mono, fontSize: 10, color: T.muted }}>
+                    Changes save automatically as you type
+                  </div>
+
+                  {/* Quick jump to other slides */}
+                  <div style={{ marginTop: 20, borderTop: `1px solid ${T.border}`, paddingTop: 16 }}>
+                    <div style={{ fontFamily: T.mono, fontSize: 10, color: T.muted, letterSpacing: "0.08em", marginBottom: 10, textTransform: "uppercase" }}>All slides with notes</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {Object.keys(notes).filter((k) => k.startsWith(deck)).map((k) => {
+                        const idx = parseInt(k.split("-")[1]);
+                        const hasContent = Object.values(notes[k] || {}).some((v) => v.trim());
+                        if (!hasContent) return null;
+                        return (
+                          <span key={k} style={{
+                            fontFamily: T.mono, fontSize: 10, padding: "3px 8px", borderRadius: 4,
+                            background: idx === slideIndex ? T.amberDim : T.card,
+                            border: `1px solid ${idx === slideIndex ? T.amber + "44" : T.border}`,
+                            color: idx === slideIndex ? T.amber : T.muted,
+                          }}>
+                            {SLIDE_LABELS[deck]?.[idx] || `Slide ${idx + 1}`}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function PresentationHub() {
   const [unlocked, setUnlocked] = useState(false);
   const [deck, setDeck] = useState("rebuttal");
@@ -1763,6 +2265,7 @@ export default function PresentationHub() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [scriptOpen, setScriptOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
   const timerRef = useRef(null);
   const elapsedRef = useRef(null);
 
@@ -1842,6 +2345,27 @@ export default function PresentationHub() {
       <NavControls current={slide} total={total} onPrev={prev} onNext={next}
         isPlaying={isPlaying} onTogglePlay={togglePlay} hasAutoplay={isRebuttal} />
 
+      {/* Edit button — always visible, top-left */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.4, scale: 1 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.3 }}
+        onClick={() => setEditorOpen(true)}
+        style={{
+          position: "fixed", top: 16, left: 24, zIndex: 200,
+          display: "flex", alignItems: "center", gap: 7,
+          background: T.card, border: `1px solid ${T.border}`,
+          borderRadius: 8, padding: "7px 14px", cursor: "pointer",
+          backdropFilter: "blur(8px)", transition: "all 0.2s",
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.borderColor = T.amber + "66"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = T.border; }}
+      >
+        <span style={{ fontSize: 12 }}>✏️</span>
+        <span style={{ fontFamily: T.mono, fontSize: 9, fontWeight: 600, letterSpacing: "0.08em", color: T.muted }}>EDIT</span>
+      </motion.button>
+
       {/* Script button — only visible on intent deck */}
       {deck === "intent" && (
         <motion.button
@@ -1882,6 +2406,9 @@ export default function PresentationHub() {
           onNext={() => { setSlide((s) => Math.min(IE_SLIDES.length - 1, s + 1)); }}
         />
       )}
+
+      {/* Slide editor modal */}
+      <SlideEditor deck={deck} slideIndex={slide} open={editorOpen} onClose={() => setEditorOpen(false)} />
     </div>
   );
 }
